@@ -1,0 +1,238 @@
+<odoo>
+    <data>
+        <record id="view_result_tree" model="ir.ui.view">
+            <field name="name">healthiva.result.tree</field>
+            <field name="model">healthiva.result</field>
+            <field name="priority">2</field>
+            <field name="arch" type="xml">
+                <tree string="Results" multi_edit="1">
+                    <field name="sequence_number"/>
+                    <field name="performing_names"/>
+                    <field name="result_status"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="act_res_partner_2_result" model="ir.actions.act_window">
+            <field name="name">Results</field>
+            <field name="res_model">healthiva.result</field>
+            <field name="view_mode">tree,form</field>
+            <field name="views">[("healthiva_contacts_lims.view_result_tree","tree")]</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Record a new test result
+                </p>
+            </field>
+        </record>
+
+        <record id="view_result_form" model="ir.ui.view">
+            <field name="name">healthiva.result.form</field>
+            <field name="model">healthiva.result</field>
+            <field name="priority" eval="1"/>
+            <field name="arch" type="xml">
+                <form string="Results">
+                <sheet>
+                    <div class="oe_button_box" name="button_box"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <div class="oe_title">
+                        <field name="active" invisible="1"/>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="sequence_number"/>
+                            <field name="value_type"/>
+                            <field name="observation_identifier"/>
+                            <field name="observation_text"/>
+                            <field name="observation_date"/>
+                            <field name="coding_system_name1"/>
+                            <field name="alternate_identifier"/>
+                            <field name="alternate_observation_text"/>
+                            <field name="alternate_observation_system"/>
+                            <field name="observation_subid"/>
+                            <field name="observation_value"/>
+                            <field name="date_type"/>                        
+                            <field name="date_subtype"/>                        
+                            <field name="encoding"/>                        
+                            <field name="data_text"/>                        
+                            <field name="coding_system"/>                        
+                            <field name="identifier"/>                        
+                            <field name="result_text"/>                        
+                            <field name="coding_system_name1"/>
+                            <field name="patient_id"/>
+                        </group>
+                        <group>
+                            <field name="ref_ranges"/>
+                            <field name="abnormal_flags"/>
+                            <field name="probability"/>
+                            <field name="abnormal_test_nature"/>
+                            <field name="result_status"/>
+                            <field name="ref_range_update_date"/>
+                            <field name="access_checks"/>
+                            <field name="producerid"/>
+                            <field name="observer"/>
+                            <field name="observation_method"/>
+                            <field name="equipment_identifier"/>
+                            <field name="analysis_date"/>                        
+                            <field name="reserver_hamorizing1"/>                        
+                            <field name="reserver_hamorizing2"/>                        
+                            <field name="reserver_hamorizing3"/>                        
+                            <field name="performing_names"/>         
+                            <field name="performing_address"/>         
+                            <field name="performing_director"/>         
+                            <field name="release_category"/>         
+                            <field name="route_cause"/>         
+                            <field name="local_process_control"/>         
+                        </group>
+                    </group>
+                    <notebook colspan="4">
+                        <page name='internal_notes' string="Internal Notes">
+                            <field name="comment" placeholder="Internal note..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_healthiva_result_filter">
+            <field name="name">healthiva.result.select</field>
+            <field name="model">healthiva.result</field>
+            <field name="arch" type="xml">
+                <search string="Search Partner">
+                    <field name="sequence_number"/>
+                    <field name="value_type"/>
+                    <field name="observation_identifier"/>
+                    <field name="observation_text"/>
+                    <field name="observation_date"/>
+                    <field name="coding_system_name1"/>
+                    <field name="alternate_identifier"/>
+                    <field name="alternate_observation_text"/>
+                    <field name="alternate_observation_system"/>
+                    <field name="observation_subid"/>
+                    <field name="observation_value"/>
+                    <field name="date_type"/>                        
+                    <field name="date_subtype"/>                        
+                    <field name="encoding"/>                        
+                    <field name="data_text"/>                        
+                    <field name="coding_system"/>                        
+                    <field name="identifier"/>                        
+                    <field name="result_text"/>                        
+                    <field name="coding_system_name1"/>
+                    <field name="patient_id"/>
+                    <field name="ref_ranges"/>
+                    <field name="abnormal_flags"/>
+                    <field name="probability"/>
+                    <field name="abnormal_test_nature"/>
+                    <field name="result_status"/>
+                    <field name="ref_range_update_date"/>
+                    <field name="access_checks"/>
+                    <field name="producerid"/>
+                    <field name="observer"/>
+                    <field name="observation_method"/>
+                    <field name="equipment_identifier"/>
+                    <field name="analysis_date"/>                        
+                    <field name="reserver_hamorizing1"/>                        
+                    <field name="reserver_hamorizing2"/>                        
+                    <field name="reserver_hamorizing3"/>                        
+                    <field name="performing_names"/>         
+                    <field name="performing_address"/>         
+                    <field name="performing_director"/>         
+                    <field name="release_category"/>         
+                    <field name="route_cause"/>         
+                    <field name="local_process_control"/>      
+                    <separator/>
+                    <filter string="Sequence Number" name="sequence_number"/>
+                    <filter string="Value Type" name="value_type"/>
+                    <filter string="Observation Identifier" name="observation_identifier"/>
+                    <filter string="Observation Text" name="observation_text"/>
+                    <filter string="Observation Date/Time" name="observation_date"/>
+                    <filter string="Name of Coding Sytem" name="coding_system_name1"/>
+                    <filter string="Alternate Identifier" name="alternate_identifier"/>
+                    <filter string="Alternate Observation Text" name="alternate_observation_text"/>
+                    <filter string="Alternate Observation System" name="alternate_observation_system"/>
+                    <filter string="Observation Sub ID" name="observation_subid"/>
+                    <filter string="Observation Value" name="observation_value"/>
+                    <filter string="Type of Data" name="date_type"/>                        
+                    <filter string="Data Sub Type" name="date_subtype"/>                        
+                    <filter string="Encoding or Identifier" name="encoding"/>                        
+                    <filter string="Data or Text" name="data_text"/>                        
+                    <filter string="Coding System" name="coding_system"/>                        
+                    <filter string="Identifier" name="identifier"/>                        
+                    <filter string="Text" name="result_text"/>                        
+                    <filter string="Name of the Coding System 1" name="coding_system_name1"/>
+                    <filter string="Name of the Coding System 2" name="coding_system_name2"/>
+                    <filter string="Related Patient" name="patient_id"/>
+                    <filter string="Reference Ranges" name="ref_ranges"/>
+                    <filter string="Abnormal Flags" name="abnormal_flags"/>
+                    <filter string="Probability " name="probability"/>
+                    <filter string="Nature of Abnormal Tests" name="abnormal_test_nature"/>
+                    <filter string="Observation Result Status" name="result_status"/>
+                    <filter string="Date of last change in reference range or units" name="ref_range_update_date"/>
+                    <filter string="User Defined Access Checks" name="access_checks"/>
+                    <filter string="Producer ID" name="producerid"/>
+                    <filter string="Responsible Observer" name="observer"/>
+                    <filter string="Observation Method" name="observation_method"/>
+                    <filter string="Equipment Identifier" name="equipment_identifier"/>
+                    <filter string="Analysis Date" name="analysis_date"/>                        
+                    <filter string="Reserver for Harmonizing 1" name="reserver_hamorizing1"/>                        
+                    <filter string="Reserver for Harmonizing 2" name="reserver_hamorizing2"/>                        
+                    <filter string="Reserver for Harmonizing 3" name="reserver_hamorizing3"/>                        
+                    <filter string="Performing Observation Names" name="performing_names"/>         
+                    <filter string="Performing Organization Address" name="performing_address"/>         
+                    <filter string="Performing Organization Director" name="performing_director"/>         
+                    <filter string="Patient Results Release Category" name="release_category"/>         
+                    <filter string="Route Cause" name="route_cause"/>         
+                    <filter string="Local Process Control" name="local_process_control"/>   
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                    <separator/>
+                    <group expand="0" name="group_by" string="Group By">
+                        <filter string="Sequence Number" name="group_sequence_number" context="{'group_by': 'sequence_number'}"/>
+                        <filter string="Value Type" name="group_value_type" context="{'group_by': 'value_type'}"/>
+                        <filter string="Observation Identifier" name="group_observation_identifier" context="{'group_by': 'observation_identifier'}"/>
+                        <filter string="Observation Text" name="group_observation_text" context="{'group_by': 'observation_text'}"/>
+                        <filter string="Observation Date/Time" name="group_observation_date" context="{'group_by': 'observation_date'}"/>
+                        <filter string="Name of Coding Sytem 1" name="group_coding_system_name1" context="{'group_by': 'coding_system_name1'}"/>
+                        <filter string="Name of Coding Sytem 2" name="group_coding_system_name1" context="{'group_by': 'coding_system_name2'}"/>
+                        <filter string="Alternate Identifier" name="group_alternate_identifier" context="{'group_by': 'alternate_identifier'}"/>
+                        <filter string="Alternate Observation Text" name="group_alternate_observation_text" context="{'group_by': 'alternate_observation_text'}"/>
+                        <filter string="Alternate Observation System" name="group_alternate_observation_system" context="{'group_by': 'alternate_observation_system'}"/>
+                        <filter string="Observation Sub ID" name="group_observation_subid" context="{'group_by': 'observation_subid'}"/>
+                        <filter string="Observation Value" name="group_observation_value" context="{'group_by': 'observation_value'}"/>
+                        <filter string="Type of Data" name="group_date_type" context="{'group_by': 'date_type'}"/>                        
+                        <filter string="Data Sub Type" name="group_date_subtype" context="{'group_by': 'date_subtype'}"/>                        
+                        <filter string="Encoding or Identifier" name="group_encoding" context="{'group_by': 'encoding'}"/>                        
+                        <filter string="Data or Text" name="group_data_text" context="{'group_by': 'data_text'}"/>                        
+                        <filter string="Coding System" name="group_coding_system" context="{'group_by': 'coding_system'}"/>                        
+                        <filter string="Identifier" name="group_identifier" context="{'group_by': 'identifier'}"/>                        
+                        <filter string="Text" name="group_result_text" context="{'group_by': 'result_text'}"/>                        
+                        <filter string="Name of the Coding System 1" name="group_coding_system_name1" context="{'group_by': 'coding_system_name1'}"/>
+                        <filter string="Name of the Coding System 2" name="group_coding_system_name2" context="{'group_by': 'coding_system_name2'}"/>
+                        <filter string="Related Patient" name="group_patient_id" context="{'group_by': 'patient_id'}"/>
+                        <filter string="Reference Ranges" name="group_ref_ranges" context="{'group_by': 'ref_ranges'}"/>
+                        <filter string="Abnormal Flags" name="group_abnormal_flags" context="{'group_by': 'abnormal_flags'}"/>
+                        <filter string="Probability " name="group_probability" context="{'group_by': 'probability'}"/>
+                        <filter string="Nature of Abnormal Tests" name="group_abnormal_test_nature" context="{'group_by': 'abnormal_test_nature'}"/>
+                        <filter string="Observation Result Status" name="group_result_status" context="{'group_by': 'result_status'}"/>
+                        <filter string="Date of last change in reference range or units" name="group_ref_range_update_date" context="{'group_by': 'ref_range_update_date'}"/>
+                        <filter string="User Defined Access Checks" name="group_access_checks" context="{'group_by': 'access_checks'}"/>
+                        <filter string="Producer ID" name="group_producerid" context="{'group_by': 'producerid'}"/>
+                        <filter string="Responsible Observer" name="group_observer" context="{'group_by': 'observer'}"/>
+                        <filter string="Observation Method" name="group_observation_method" context="{'group_by': 'observation_method'}"/>
+                        <filter string="Equipment Identifier" name="group_equipment_identifier" context="{'group_by': 'equipment_identifier'}"/>
+                        <filter string="Analysis Date" name="group_analysis_date" context="{'group_by': 'analysis_date'}"/>                        
+                        <filter string="Reserver for Harmonizing 1" name="group_reserver_hamorizing1" context="{'group_by': 'reserver_hamorizing1'}"/>                        
+                        <filter string="Reserver for Harmonizing 2" name="group_reserver_hamorizing2" context="{'group_by': 'reserver_hamorizing2'}"/>                        
+                        <filter string="Reserver for Harmonizing 3" name="group_reserver_hamorizing3" context="{'group_by': 'reserver_hamorizing3'}"/>                        
+                        <filter string="Performing Observation Names" name="group_performing_names" context="{'group_by': 'performing_names'}"/>         
+                        <filter string="Performing Organization Address" name="group_performing_address" context="{'group_by': 'performing_address'}"/>         
+                        <filter string="Performing Organization Director" name="group_performing_director" context="{'group_by': 'performing_director'}"/>         
+                        <filter string="Patient Results Release Category" name="group_release_category" context="{'group_by': 'release_category'}"/>         
+                        <filter string="Route Cause" name="group_route_cause" context="{'group_by': 'route_cause'}"/>         
+                        <filter string="Local Process Control" name="group_local_process_control" context="{'group_by': 'local_process_control'}"/>   
+                    </group>
+                </search>
+            </field>
+        </record>
+    </data>
+</odoo>

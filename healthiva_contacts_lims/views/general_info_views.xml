@@ -1,0 +1,109 @@
+<odoo>
+    <data>
+        <record id="view_general_info_tree" model="ir.ui.view">
+            <field name="name">healthiva.general_info.tree</field>
+            <field name="model">healthiva.general_info</field>
+            <field name="priority">2</field>
+            <field name="arch" type="xml">
+                <tree string="General Infos" multi_edit="1">
+                    <field name="email"/>
+                    <field name="height"/>
+                    <field name="weight"/>
+                </tree>
+            </field>
+        </record>
+        <record id="act_res_partner_2_general_info" model="ir.actions.act_window">
+            <field name="name">General Infos</field>
+            <field name="res_model">healthiva.general_info</field>
+            <field name="view_mode">tree,form</field>
+            <field name="views">[("healthiva_contacts_lims.view_general_info_tree","tree")]</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Record a new general info
+                </p>
+            </field>
+        </record>
+        <record id="view_general_info_form" model="ir.ui.view">
+            <field name="name">healthiva.general_info.form</field>
+            <field name="model">healthiva.general_info</field>
+            <field name="priority" eval="1"/>
+            <field name="arch" type="xml">
+                <form string="General Infos">
+                <sheet>
+                    <div class="oe_button_box" name="button_box"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <div class="oe_title">
+                        <field name="active" invisible="1"/>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="height"/>
+                            <field name="weight"/>
+                            <field name="weight_uom"/>
+                            <field name="collection_volume"/>
+                            <field name="collection_uom"/>
+                        </group>
+                        <group>
+                            <field name="waist"/>
+                            <field name="bp_systolic"/>
+                            <field name="bp_diastolic"/>
+                            <field name="pulse"/>
+                            <field name="email"/>
+                        </group>
+                    </group>
+                    <notebook colspan="4">
+                        <page name='internal_notes' string="Internal Notes">
+                            <field name="comment" placeholder="Internal note..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_healthiva_general_info_filter">
+            <field name="name">healthiva.general_info.select</field>
+            <field name="model">healthiva.general_info</field>
+            <field name="arch" type="xml">
+                <search string="Search Partner">
+                    <field name="height"/>
+                    <field name="weight"/>
+                    <field name="weight_uom"/>
+                    <field name="collection_volume"/>
+                    <field name="collection_uom"/>
+                    <field name="waist"/>
+                    <field name="bp_systolic"/>
+                    <field name="bp_diastolic"/>
+                    <field name="pulse"/>
+                    <field name="email"/>  
+                    <separator/>
+                    <filter string="Height" name="height"/>
+                    <filter string="Weight" name="weight"/>
+                    <filter string="Weight Unit of Measure" name="weight_uom"/>
+                    <filter string="Collection Volume Quantity" name="collection_volume"/>
+                    <filter string="Collection Volume Unit of Measure" name="collection_uom"/>
+                    <filter string="Waist Measurement" name="waist"/>
+                    <filter string="Blood Pressure Systolic" name="bp_systolic"/>
+                    <filter string="Blood Pressure Diastolic" name="bp_diastolic"/>
+                    <filter string="Pulse" name="pulse"/>
+                    <filter string="Patient Email" name="email"/> 
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                    <separator/>
+                    <group expand="0" name="group_by" string="Group By">
+                        <filter string="Height" name="group_height" context="{'group_by': 'height'}"/> 
+                        <filter string="Weight" name="group_weight" context="{'group_by': 'weight'}"/> 
+                        <filter string="Weight Unit of Measure" name="group_weight_uom" context="{'group_by': 'weight_uom'}"/> 
+                        <filter string="Collection Volume Quantity" name="group_collection_volume" context="{'group_by': 'collection_volume'}"/> 
+                        <filter string="Collection Volume Unit of Measure" name="group_collection_uom" context="{'group_by': 'collection_uom'}"/> 
+                        <filter string="Waist Measurement" name="group_waist" context="{'group_by': 'waist'}"/> 
+                        <filter string="Blood Pressure Systolic" name="group_bp_systolic" context="{'group_by': 'bp_systolic'}"/> 
+                        <filter string="Blood Pressure Diastolic" name="group_bp_diastolic" context="{'group_by': 'bp_diastolic'}"/> 
+                        <filter string="Pulse" name="group_pulse" context="{'group_by': 'pulse'}"/> 
+                        <filter string="Patient Email" name="group_email" context="{'group_by': 'email'}"/>  
+                    </group>
+                </search>
+            </field>
+        </record>
+    </data>
+</odoo>

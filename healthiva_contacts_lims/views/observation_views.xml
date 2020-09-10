@@ -1,0 +1,235 @@
+<odoo>
+    <data>
+        <record id="view_observation_tree" model="ir.ui.view">
+            <field name="name">healthiva.observation.tree</field>
+            <field name="model">healthiva.observation</field>
+            <field name="priority">2</field>
+            <field name="arch" type="xml">
+                <tree string="Observations" multi_edit="1">
+                    <field name="provider_first"/>
+                    <field name="provider_last"/>
+                </tree>
+            </field>
+        </record>
+        <record id="act_res_partner_2_observation" model="ir.actions.act_window">
+            <field name="name">Observations</field>
+            <field name="res_model">healthiva.observation</field>
+            <field name="view_mode">tree,form</field>
+            <field name="views">[("healthiva_contacts_lims.view_observation_tree","tree")]</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Record a new observation
+                </p>
+            </field>
+        </record>
+        <record id="view_observation_form" model="ir.ui.view">
+            <field name="name">healthiva.observation.form</field>
+            <field name="model">healthiva.observation</field>
+            <field name="priority" eval="1"/>
+            <field name="arch" type="xml">
+                <form string="Observations">
+                <sheet>
+                    <div class="oe_button_box" name="button_box"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <div class="oe_title">
+                        <field name="active" invisible="1"/>
+                    </div>
+                    <div class="oe_title">
+                        <field name="provider_prefix"/>
+                        <field name="provider_first"/>
+                        <field name="provider_suffix"/>
+                        <field name="provider_middle"/>
+                        <field name="provider_last"/>
+                        <field name="provider_degree"/>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="providerid"/>
+                            <field name="sequence_number"/>
+                            <field name="foreign_accessionid"/>
+                            <field name="foreign_appid"/>
+                            <field name="internal_accessionid"/>
+                            <field name="internal_appid"/>
+                            <field name="battery_identifier"/>
+                            <field name="priority"/>
+                            <field name="specimen_collect_date"/>
+                            <field name="specimen_collect_end_time"/>
+                            <field name="collection_volume"/>
+                            <field name="collection_uom"/>
+                            <field name="collector_identifier"/>                        
+                            <field name="action_code"/>                        
+                            <field name="danger_code"/>                        
+                            <field name="parent_order_link"/>                        
+                            <field name="clinic_info"/>                        
+                            <field name="clinic_info_back"/>                        
+                        </group>
+                        <group>
+                            <field name="providerid"/>
+                            <field name="specimen_receipt_date"/>
+                            <field name="specimen_source"/>
+                            <field name="source_table"/>
+                            <field name="phone"/>
+                            <field name="requester_field2"/>
+                            <field name="producer_field1"/>
+                            <field name="producer_field2"/>
+                            <field name="microbiology_organism"/>
+                            <field name="coding_system"/>
+                            <field name="report_date"/>
+                            <field name="producer_charge"/>                        
+                            <field name="producer_sectionid"/>                        
+                            <field name="order_result_status"/>                        
+                            <field name="organism_link"/>                        
+                            <field name="subid"/>         
+                            <field name="quantity_timing"/>         
+                            <field name="courtesy_copies"/>         
+                        </group>
+                    </group>
+                    <notebook colspan="4">
+                        <page name='internal_notes' string="Internal Notes">
+                            <field name="comment" placeholder="Internal note..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_healthiva_observation_filter">
+            <field name="name">healthiva.observation.select</field>
+            <field name="model">healthiva.observation</field>
+            <field name="arch" type="xml">
+                <search string="Search Partner">
+                    <field name="provider_prefix"/>
+                    <field name="provider_first"/>
+                    <field name="provider_suffix"/>
+                    <field name="provider_middle"/>
+                    <field name="provider_last"/>
+                    <field name="provider_degree"/>
+                    <field name="providerid"/>
+                    <field name="sequence_number"/>
+                    <field name="foreign_accessionid"/>
+                    <field name="foreign_appid"/>
+                    <field name="internal_accessionid"/>
+                    <field name="internal_appid"/>
+                    <field name="battery_identifier"/>
+                    <field name="priority"/>
+                    <field name="specimen_collect_date"/>
+                    <field name="specimen_collect_end_time"/>
+                    <field name="collection_volume"/>
+                    <field name="collection_uom"/>
+                    <field name="collector_identifier"/>                        
+                    <field name="action_code"/>                        
+                    <field name="danger_code"/>                        
+                    <field name="parent_order_link"/>                        
+                    <field name="clinic_info"/>                        
+                    <field name="clinic_info_back"/>
+                    <field name="specimen_receipt_date"/>
+                    <field name="specimen_source"/>
+                    <field name="source_table"/>
+                    <field name="phone"/>
+                    <field name="requester_field2"/>
+                    <field name="producer_field1"/>
+                    <field name="producer_field2"/>
+                    <field name="microbiology_organism"/>
+                    <field name="coding_system"/>
+                    <field name="report_date"/>
+                    <field name="producer_charge"/>                        
+                    <field name="producer_sectionid"/>                        
+                    <field name="order_result_status"/>                        
+                    <field name="organism_link"/>                        
+                    <field name="subid"/>         
+                    <field name="quantity_timing"/>         
+                    <field name="courtesy_copies"/>  
+                    <separator/>
+                    <filter string="Provider Prefix" name="provider_prefix"/>
+                    <filter string="Provider First Name" name="provider_first"/>
+                    <filter string="Provider Suffix" name="provider_suffix"/>
+                    <filter string="Provider Middle Name" name="provider_middle"/>
+                    <filter string="Provider Last Name" name="provider_last"/>
+                    <filter string="Provider Degree" name="provider_degree"/>
+                    <filter string="Provider ID" name="providerid"/>
+                    <filter string="Sequence Number" name="sequence_number"/>
+                    <filter string="Unique Foreign Accession ID" name="foreign_accessionid"/>
+                    <filter string="Foreign Application Institution ID" name="foreign_appid"/>
+                    <filter string="Internal Accession ID" name="internal_accessionid"/>
+                    <filter string="Internal Application Institution ID" name="internal_appid"/>
+                    <filter string="Observation Battery Identifier" name="battery_identifier"/>
+                    <filter string="Priority" name="priority"/>
+                    <filter string="Speciment Collection Date/Time" name="specimen_collect_date"/>
+                    <filter string="Speciment Collection End Time" name="specimen_collect_end_time"/>
+                    <filter string="Collection/Urine Volume" name="collection_volume"/>
+                    <filter string="Collection/Urine Unit of Measure" name="collection_uom"/>
+                    <filter string="Collector Identifier" name="collector_identifier"/>                        
+                    <filter string="Action Code" name="action_code"/>                        
+                    <filter string="Danger Code" name="danger_code"/>                        
+                    <filter string="Link to Parent Order" name="parent_order_link"/>                        
+                    <filter string="Relevant Clinical Information" name="clinic_info"/>                        
+                    <filter string="Backward Compatible Information" name="clinic_info_back"/>
+                    <filter string="Date/Time of Specimen Receipt in Lab" name="specimen_receipt_date"/>
+                    <filter string="Specimen Source" name="specimen_source"/>
+                    <filter string="Source Table" name="source_table"/>
+                    <filter string="Order Callback Phone Number" name="phone"/>
+                    <filter string="Requester Field" name="requester_field2"/>
+                    <filter string="Producer Field 1" name="producer_field1"/>
+                    <filter string="Producer Field 2" name="producer_field2"/>
+                    <filter string="Microbiology Organism" name="microbiology_organism"/>
+                    <filter string="Name of Coding System" name="coding_system"/>
+                    <filter string="Date/Time of Observations Reported" name="report_date"/>
+                    <filter string="Producer's Charge" name="producer_charge"/>                        
+                    <filter string="Producer's Section ID" name="producer_sectionid"/>                        
+                    <filter string="Order Result Status:" name="order_result_status"/>                        
+                    <filter string="Link to Parent Result or Organism Link to Susceptibility" name="organism_link"/>                        
+                    <filter string="Sub ID" name="subid"/>         
+                    <filter string="Quantity/Timing" name="quantity_timing"/>         
+                    <filter string="Courtesy Copies To" name="courtesy_copies"/>  
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                    <separator/>
+                    <group expand="0" name="group_by" string="Group By">
+                        <filter string="Ordering Provider Prefix" name="group_provider_prefix" context="{'group_by': 'provider_prefix'}"/>
+                        <filter string="Ordering Provider First Name" name="group_provider_first" context="{'group_by': 'provider_first'}"/>
+                        <filter string="Ordering Provider Suffix" name="group_provider_suffix" context="{'group_by': 'provider_suffix'}"/>
+                        <filter string="Ordering Provider Middle Name" name="group_provider_middle" context="{'group_by': 'provider_middle'}"/>
+                        <filter string="Ordering Provider Last Name" name="group_provider_last" context="{'group_by': 'provider_last'}"/>
+                        <filter string="Ordering Provider Degree" name="group_provider_degree" context="{'group_by': 'provider_degree'}"/>
+                        <filter string="Sequence Number" name="group_sequence_number" context="{'group_by': 'sequence_number'}"/>
+                        <filter string="Unique Foreign Accession ID" name="group_foreign_accessionid" context="{'group_by': 'foreign_accessionid'}"/>
+                        <filter string="Foreign Application Institution ID" name="group_foreign_appid" context="{'group_by': 'foreign_appid'}"/>
+                        <filter string="Internal Accession ID" name="group_internal_accessionid" context="{'group_by': 'internal_accessionid'}"/>
+                        <filter string="Internal Application Institution ID" name="group_internal_appid" context="{'group_by': 'internal_appid'}"/>
+                        <filter string="Observation Battery Identifier" name="group_battery_identifier" context="{'group_by': 'battery_identifier'}"/>
+                        <filter string="Priority" name="group_priority" context="{'group_by': 'priority'}"/>
+                        <filter string="Speciment Collection Date/Time" name="group_specimen_collect_date" context="{'group_by': 'specimen_collect_date'}"/>
+                        <filter string="Speciment Collection End Time" name="group_specimen_collect_end_time" context="{'group_by': 'specimen_collect_end_time'}"/>
+                        <filter string="Collection/Urine Volume" name="group_collection_volume" context="{'group_by': 'collection_volume'}"/>
+                        <filter string="Collection/Urine Unit of Measure" name="group_collection_uom" context="{'group_by': 'collection_uom'}"/>
+                        <filter string="Collector Identifier" name="group_collector_identifier" context="{'group_by': 'collector_identifier'}"/>                        
+                        <filter string="Action Code" name="group_action_code" context="{'group_by': 'action_code'}"/>                        
+                        <filter string="Danger Code" name="group_danger_code" context="{'group_by': 'danger_code'}"/>                        
+                        <filter string="Link to Parent Order" name="group_parent_order_link" context="{'group_by': 'parent_order_link'}"/>                        
+                        <filter string="Relevant Clinical Information" name="group_clinic_info" context="{'group_by': 'clinic_info'}"/>                        
+                        <filter string="Backward Compatible Information" name="group_clinic_info_back" context="{'group_by': 'clinic_info_back'}"/>
+                        <filter string="Ordering Provider ID" name="group_providerid" context="{'group_by': 'providerid'}"/>
+                        <filter string="Date/Time of Specimen Receipt in Lab" name="group_specimen_receipt_date" context="{'group_by': 'specimen_receipt_date'}"/>
+                        <filter string="Specimen Source" name="group_specimen_source" context="{'group_by': 'specimen_source'}"/>
+                        <filter string="Source Table" name="group_source_table" context="{'group_by': 'source_table'}"/>
+                        <filter string="Order Callback Phone Number" name="group_phone" context="{'group_by': 'phone'}"/>
+                        <filter string="Requester Field" name="group_requester_field2" context="{'group_by': 'requester_field2'}"/>
+                        <filter string="Producer Field 1" name="group_producer_field1" context="{'group_by': 'producer_field1'}"/>
+                        <filter string="Producer Field 2" name="group_producer_field2" context="{'group_by': 'producer_field2'}"/>
+                        <filter string="Microbiology Organism" name="group_microbiology_organism" context="{'group_by': 'microbiology_organism'}"/>
+                        <filter string="Name of Coding System" name="group_coding_system" context="{'group_by': 'coding_system'}"/>
+                        <filter string="Date/Time of Observations Reported" name="group_report_date" context="{'group_by': 'report_date'}"/>
+                        <filter string="Producer's Charge" name="group_producer_charge" context="{'group_by': 'producer_charge'}"/>                        
+                        <filter string="Producer's Section ID" name="group_producer_sectionid" context="{'group_by': 'producer_sectionid'}"/>                        
+                        <filter string="Order Result Status:" name="group_order_result_status" context="{'group_by': 'order_result_status'}"/>                        
+                        <filter string="Link to Parent Result or Organism Link to Susceptibility" name="group_organism_link" context="{'group_by': 'organism_link'}"/>                        
+                        <filter string="Sub ID" name="group_subid" context="{'group_by': 'subid'}"/>         
+                        <filter string="Quantity/Timing" name="group_quantity_timing" context="{'group_by': 'quantity_timing'}"/>         
+                        <filter string="Courtesy Copies To" name="group_courtesy_copies" context="{'group_by': 'courtesy_copies'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,271 @@
+<odoo>
+    <data>
+        <record id="view_provider_tree" model="ir.ui.view">
+            <field name="name">healthiva.provider.tree</field>
+            <field name="model">healthiva.provider</field>
+            <field name="priority">2</field>
+            <field name="arch" type="xml">
+                <tree string="Providers" multi_edit="1">
+                    <field name="sequence_number"/>
+                    <field name="assigned_location"/>
+                    <field name="patient_id"/>
+                </tree>
+            </field>
+        </record>
+        <record id="act_res_partner_2_provider" model="ir.actions.act_window">
+            <field name="name">Providers</field>
+            <field name="res_model">healthiva.provider</field>
+            <field name="view_mode">tree,form</field>
+            <field name="views">[("healthiva_contacts_lims.view_provider_tree","tree")]</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Record a new provider
+                </p>
+            </field>
+        </record>
+        <record id="view_provider_form" model="ir.ui.view">
+            <field name="name">healthiva.provider.form</field>
+            <field name="model">healthiva.provider</field>
+            <field name="priority" eval="1"/>
+            <field name="arch" type="xml">
+                <form string="Providers">
+                <sheet>
+                    <div class="oe_button_box" name="button_box"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <div class="oe_title">
+                        <field name="active" invisible="1"/>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="sequence_number"/>
+                            <field name="assigned_location"/>
+                            <field name="admission_type"/>
+                            <field name="preadmit_number"/>
+                            <field name="prior_location"/>
+                            <field name="attending_doctor"/>
+                            <field name="referring_doctor"/>
+                            <field name="consulting_doctor"/>
+                            <field name="hospital_service"/>
+                            <field name="temp_location"/>
+                            <field name="pretest_indicator"/>
+                            <field name="readmission"/>                        
+                            <field name="admit_source"/>                        
+                            <field name="ambulatory_status"/>                        
+                            <field name="vip_indicator"/>                        
+                            <field name="admitting_doctor"/>                        
+                            <field name="patient_type"/>                        
+                            <field name="visit_number"/>                        
+                            <field name="financial_class"/>
+                            <field name="charge_indicator"/>
+                            <field name="credit_rating"/>
+                            <field name="contract_code"/>
+                            <field name="contract_date"/>
+                            <field name="contract_total"/>
+                            <field name="contract_period"/>
+                            <field name="interest_code"/>
+                            <field name="contract_code"/>
+                            <field name="patient_id"/>
+                        </group>
+                        <group>
+                            <field name="tbd_code"/>
+                            <field name="tbd_date"/>
+                            <field name="bda_code"/>
+                            <field name="bd_transfer_total"/>
+                            <field name="bd_recovery_total"/>
+                            <field name="delete_indicator"/>
+                            <field name="delete_date"/>
+                            <field name="discharge_disposition"/>
+                            <field name="discharge_location"/>
+                            <field name="diet_type"/>
+                            <field name="service_location"/>
+                            <field name="bed_status"/>                        
+                            <field name="account_status"/>                        
+                            <field name="pending_loc"/>                        
+                            <field name="prior_temp_location"/>                        
+                            <field name="admit_date"/>         
+                            <field name="discharge_date"/>         
+                            <field name="current_balance"/>         
+                            <field name="adjustments_total"/>         
+                            <field name="payments_total"/>         
+                            <field name="alt_visitid"/>         
+                            <field name="visit_indicator"/>         
+                            <field name="other_provider"/>         
+                        </group>
+                    </group>
+                    <notebook colspan="4">
+                        <page name='internal_notes' string="Internal Notes">
+                            <field name="comment" placeholder="Internal note..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_healthiva_provider_filter">
+            <field name="name">healthiva.provider.select</field>
+            <field name="model">healthiva.provider</field>
+            <field name="arch" type="xml">
+                <search string="Search Partner">
+                    <field name="sequence_number"/>
+                    <field name="assigned_location"/>
+                    <field name="admission_type"/>
+                    <field name="preadmit_number"/>
+                    <field name="prior_location"/>
+                    <field name="attending_doctor"/>
+                    <field name="referring_doctor"/>
+                    <field name="consulting_doctor"/>
+                    <field name="hospital_service"/>
+                    <field name="temp_location"/>
+                    <field name="pretest_indicator"/>
+                    <field name="readmission"/>                        
+                    <field name="admit_source"/>                        
+                    <field name="ambulatory_status"/>                        
+                    <field name="vip_indicator"/>                        
+                    <field name="admitting_doctor"/>                        
+                    <field name="patient_type"/>                        
+                    <field name="visit_number"/>                        
+                    <field name="financial_class"/>
+                    <field name="charge_indicator"/>
+                    <field name="credit_rating"/>
+                    <field name="contract_code"/>
+                    <field name="contract_date"/>
+                    <field name="contract_total"/>
+                    <field name="contract_period"/>
+                    <field name="interest_code"/>
+                    <field name="contract_code"/>
+                    <field name="patient_id"/>
+                    <field name="tbd_code"/>
+                    <field name="tbd_date"/>
+                    <field name="bda_code"/>
+                    <field name="bd_transfer_total"/>
+                    <field name="bd_recovery_total"/>
+                    <field name="delete_indicator"/>
+                    <field name="delete_date"/>
+                    <field name="discharge_disposition"/>
+                    <field name="discharge_location"/>
+                    <field name="diet_type"/>
+                    <field name="service_location"/>
+                    <field name="bed_status"/>                        
+                    <field name="account_status"/>                        
+                    <field name="pending_loc"/>                        
+                    <field name="prior_temp_location"/>                        
+                    <field name="admit_date"/>         
+                    <field name="discharge_date"/>         
+                    <field name="current_balance"/>         
+                    <field name="adjustments_total"/>         
+                    <field name="payments_total"/>         
+                    <field name="alt_visitid"/>         
+                    <field name="visit_indicator"/>         
+                    <field name="other_provider"/>   
+                    <separator/>
+                    <filter string="Sequence Number" name="sequence_number"/>
+                    <filter string="Assigned Location" name="assigned_location"/>
+                    <filter string="Admission Type" name="admission_type"/>
+                    <filter string="Preadmit Number" name="preadmit_number"/>
+                    <filter string="Prior Patient Location" name="prior_location"/>
+                    <filter string="Attending Doctor" name="attending_doctor"/>
+                    <filter string="Referring Doctor" name="referring_doctor"/>
+                    <filter string="Consulting Doctor" name="consulting_doctor"/>
+                    <filter string="Hospital Service" name="hospital_service"/>
+                    <filter string="Temporary Location" name="temp_location"/>
+                    <filter string="Preadmit Test Indicator" name="pretest_indicator"/>
+                    <filter string="Re-admission Indicator" name="readmission"/>                        
+                    <filter string="Admit Source" name="admit_source"/>                        
+                    <filter string="Ambulatory Status" name="ambulatory_status"/>                        
+                    <filter string="VIP Indicator" name="vip_indicator"/>                        
+                    <filter string="Admitting Doctor" name="admitting_doctor"/>                        
+                    <filter string="Patient Type" name="patient_type"/>                        
+                    <filter string="Visit Number" name="visit_number"/>                        
+                    <filter string="Financial Class" name="financial_class"/>
+                    <filter string="Charge Price Indicator" name="charge_indicator"/>
+                    <filter string="Credit Rating" name="credit_rating"/>
+                    <filter string="Contract Effective Date" name="contract_code"/>
+                    <filter string="Contract Date" name="contract_date"/>
+                    <filter string="Contract Amount" name="contract_total"/>
+                    <filter string="Contract Period" name="contract_period"/>
+                    <filter string="Interest Code" name="interest_code"/>
+                    <filter string="Contract Code" name="contract_code"/>
+                    <filter string="Transfer to Bad Debt Code" name="tbd_code"/>
+                    <filter string="Transfer to Bad Debt Date" name="tbd_date"/>
+                    <filter string="Bad Debt Agency Code" name="bda_code"/>
+                    <filter string="Bad Debt Transfer Amount" name="bd_transfer_total"/>
+                    <filter string="Bad Debt Recovery Amount" name="bd_recovery_total"/>
+                    <filter string="Delete Indicator" name="delete_indicator"/>
+                    <filter string="Delete Date" name="delete_date"/>
+                    <filter string="Discharge Disposition" name="discharge_disposition"/>
+                    <filter string="Discharge Location" name="discharge_location"/>
+                    <filter string="Diet Type" name="diet_type"/>
+                    <filter string="Service Location" name="service_location"/>
+                    <filter string="Bed Status" name="bed_status"/>                        
+                    <filter string="Account Status" name="account_status"/>                        
+                    <filter string="Pending Location" name="pending_loc"/>                        
+                    <filter string="Prior Temporary Location" name="prior_temp_location"/>                        
+                    <filter string="Admit Date/Time" name="admit_date"/>         
+                    <filter string="Discharge Date/Time" name="discharge_date"/>         
+                    <filter string="Current Patient Balance" name="current_balance"/>         
+                    <filter string="Total Adjustments" name="adjustments_total"/>         
+                    <filter string="Total Payments" name="payments_total"/>         
+                    <filter string="Alternate Visit ID" name="alt_visitid"/>         
+                    <filter string="Visit Indicator" name="visit_indicator"/>         
+                    <filter string="Other Healthcare Provider" name="other_provider"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                    <separator/>
+                    <group expand="0" name="group_by" string="Group By">
+                        <filter string="Sequence Number" name="group_sequence_number" context="{'group_by': 'sequence_number'}"/>
+                        <filter string="Assigned Location" name="group_assigned_location" context="{'group_by': 'assigned_location'}"/>
+                        <filter string="Admission Type" name="group_admission_type" context="{'group_by': 'admission_type'}"/>
+                        <filter string="Preadmit Number" name="group_preadmit_number" context="{'group_by': 'preadmit_number'}"/>
+                        <filter string="Prior Patient Location" name="group_prior_location" context="{'group_by': 'prior_location'}"/>
+                        <filter string="Attending Doctor" name="group_attending_doctor" context="{'group_by': 'attending_doctor'}"/>
+                        <filter string="Referring Doctor" name="group_referring_doctor" context="{'group_by': 'referring_doctor'}"/>
+                        <filter string="Consulting Doctor" name="group_consulting_doctor" context="{'group_by': 'consulting_doctor'}"/>
+                        <filter string="Hospital Service" name="group_hospital_service" context="{'group_by': 'hospital_service'}"/>
+                        <filter string="Temporary Location" name="group_temp_location" context="{'group_by': 'temp_location'}"/>
+                        <filter string="Preadmit Test Indicator" name="group_pretest_indicator" context="{'group_by': 'pretest_indicator'}"/>
+                        <filter string="Re-admission Indicator" name="group_readmission" context="{'group_by': 'readmission'}"/>                        
+                        <filter string="Admit Source" name="group_admit_source" context="{'group_by': 'admit_source'}"/>                        
+                        <filter string="Ambulatory Status" name="group_ambulatory_status" context="{'group_by': 'ambulatory_status'}"/>                        
+                        <filter string="VIP Indicator" name="group_vip_indicator" context="{'group_by': 'vip_indicator'}"/>                        
+                        <filter string="Admitting Doctor" name="group_admitting_doctor" context="{'group_by': 'admitting_doctor'}"/>                        
+                        <filter string="Patient Type" name="group_patient_type" context="{'group_by': 'patient_type'}"/>                        
+                        <filter string="Visit Number" name="group_visit_number" context="{'group_by': 'visit_number'}"/>                        
+                        <filter string="Financial Class" name="group_financial_class" context="{'group_by': 'financial_class'}"/>
+                        <filter string="Charge Price Indicator" name="group_charge_indicator" context="{'group_by': 'charge_indicator'}"/>
+                        <filter string="Credit Rating" name="group_credit_rating" context="{'group_by': 'credit_rating'}"/>
+                        <filter string="Contract Effective Date" name="group_contract_code" context="{'group_by': 'contract_code'}"/>
+                        <filter string="Contract Date" name="group_contract_date" context="{'group_by': 'contract_date'}"/>
+                        <filter string="Contract Amount" name="group_contract_total" context="{'group_by': 'contract_total'}"/>
+                        <filter string="Contract Period" name="group_contract_period" context="{'group_by': 'contract_period'}"/>
+                        <filter string="Interest Code" name="group_interest_code" context="{'group_by': 'interest_code'}"/>
+                        <filter string="Contract Code" name="group_contract_code" context="{'group_by': 'contract_code'}"/>
+                        <filter string="Transfer to Bad Debt Code" name="group_tbd_code" context="{'group_by': 'tbd_code'}"/>
+                        <filter string="Transfer to Bad Debt Date" name="group_tbd_date" context="{'group_by': 'tbd_date'}"/>
+                        <filter string="Bad Debt Agency Code" name="group_bda_code" context="{'group_by': 'bda_code'}"/>
+                        <filter string="Bad Debt Transfer Amount" name="group_bd_transfer_total" context="{'group_by': 'bd_transfer_total'}"/>
+                        <filter string="Bad Debt Recovery Amount" name="group_bd_recovery_total" context="{'group_by': 'bd_recovery_total'}"/>
+                        <filter string="Delete Indicator" name="group_delete_indicator" context="{'group_by': 'delete_indicator'}"/>
+                        <filter string="Delete Date" name="group_delete_date" context="{'group_by': 'delete_date'}"/>
+                        <filter string="Discharge Disposition" name="group_discharge_disposition" context="{'group_by': 'discharge_disposition'}"/>
+                        <filter string="Discharge Location" name="group_discharge_location" context="{'group_by': 'discharge_location'}"/>
+                        <filter string="Diet Type" name="group_diet_type" context="{'group_by': 'diet_type'}"/>
+                        <filter string="Service Location" name="group_service_location" context="{'group_by': 'service_location'}"/>
+                        <filter string="Bed Status" name="group_bed_status" context="{'group_by': 'bed_status'}"/>                        
+                        <filter string="Account Status" name="group_account_status" context="{'group_by': 'account_status'}"/>                        
+                        <filter string="Pending Location" name="group_pending_loc" context="{'group_by': 'pending_loc'}"/>                        
+                        <filter string="Prior Temporary Location" name="group_prior_temp_location" context="{'group_by': 'prior_temp_location'}"/>                        
+                        <filter string="Admit Date/Time" name="group_admit_date" context="{'group_by': 'admit_date'}"/>         
+                        <filter string="Discharge Date/Time" name="group_discharge_date" context="{'group_by': 'discharge_date'}"/>         
+                        <filter string="Current Patient Balance" name="group_current_balance" context="{'group_by': 'current_balance'}"/>         
+                        <filter string="Total Adjustments" name="group_adjustments_total" context="{'group_by': 'adjustments_total'}"/>         
+                        <filter string="Total Payments" name="group_payments_total" context="{'group_by': 'payments_total'}"/>         
+                        <filter string="Alternate Visit ID" name="group_alt_visitid" context="{'group_by': 'alt_visitid'}"/>         
+                        <filter string="Visit Indicator" name="group_visit_indicator" context="{'group_by': 'visit_indicator'}"/>         
+                        <filter string="Other Healthcare Provider" name="group_other_provider" context="{'group_by': 'other_provider'}"/>  
+                    </group>
+                </search>
+            </field>
+        </record>
+    </data>
+</odoo>

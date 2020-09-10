@@ -1,0 +1,203 @@
+<odoo>
+    <data>
+        <record id="view_insurance_tree" model="ir.ui.view">
+            <field name="name">healthiva.insurance.tree</field>
+            <field name="model">healthiva.insurance</field>
+            <field name="priority">2</field>
+            <field name="arch" type="xml">
+                <tree string="Insurances" multi_edit="1">
+                    <field name="sequence_number"/>
+                    <field name="insured_last_name"/>
+                    <field name="insured_first_name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="act_res_partner_2_insurance" model="ir.actions.act_window">
+            <field name="name">Insurances</field>
+            <field name="res_model">healthiva.insurance</field>
+            <field name="view_mode">tree,form</field>
+            <field name="views">[("healthiva_contacts_lims.view_insurance_tree","tree")]</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Record a new insurance
+                </p>
+            </field>
+        </record>
+
+        <record id="view_insurance_form" model="ir.ui.view">
+            <field name="name">healthiva.insurance.form</field>
+            <field name="model">healthiva.insurance</field>
+            <field name="priority" eval="1"/>
+            <field name="arch" type="xml">
+                <form string="Insurances">
+                <sheet>
+                    <div class="oe_button_box" name="button_box"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <div class="oe_title">
+                        <field name="active" invisible="1"/>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="sequence_number"/>
+                            <field name="id_number"/>
+                            <field name="payer_code"/>
+                            <field name="group_number"/>
+                            <field name="group_name"/>
+                            <field name="employerid"/>
+                            <field name="employer_name"/>
+                            <field name="plan_effective_date"/>
+                            <field name="plan_expiration_date"/>
+                            <field name="authorization_info"/>
+                            <field name="plan_type"/>
+                            <field name="insured_first_name"/>                        
+                            <field name="insured_middle_name"/>                        
+                            <field name="insured_last_name"/>                        
+                            <field name="insured_relation"/>                        
+                            <field name="assignment_benefits"/>                        
+                            <field name="coordinator_benefits"/>
+                            <field name="patient_id"/>
+                        </group>
+                        <group>
+                            <field name="primary_payer"/>
+                            <field name="notice_admit_code"/>
+                            <field name="notice_admit_date"/>
+                            <field name="report_eligibility_flag"/>
+                            <field name="report_eligibility_date"/>
+                            <field name="release_info_code"/>
+                            <field name="preadmit_certification"/>
+                            <field name="verification_date"/>
+                            <field name="verification_by"/>
+                            <field name="agreement_type"/>
+                            <field name="bill_status"/>
+                            <field name="reserve_days"/>                        
+                            <field name="reserve_days_delay"/>                        
+                            <field name="company_plan_code"/>                        
+                            <field name="policy_number"/>       
+                        </group>
+                    </group>
+                    <notebook colspan="4">
+                        <page name='internal_notes' string="Internal Notes">
+                            <field name="comment" placeholder="Internal note..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_healthiva_insurance_filter">
+            <field name="name">healthiva.insurance.select</field>
+            <field name="model">healthiva.insurance</field>
+            <field name="arch" type="xml">
+                <search string="Search Partner">
+                    <field name="sequence_number"/>
+                    <field name="id_number"/>
+                    <field name="payer_code"/>
+                    <field name="group_number"/>
+                    <field name="group_name"/>
+                    <field name="employerid"/>
+                    <field name="employer_name"/>
+                    <field name="plan_effective_date"/>
+                    <field name="plan_expiration_date"/>
+                    <field name="authorization_info"/>
+                    <field name="plan_type"/>
+                    <field name="insured_first_name"/>                        
+                    <field name="insured_middle_name"/>                        
+                    <field name="insured_last_name"/>                        
+                    <field name="insured_relation"/>                        
+                    <field name="assignment_benefits"/>                        
+                    <field name="coordinator_benefits"/>
+                    <field name="patient_id"/>
+                    <field name="primary_payer"/>
+                    <field name="notice_admit_code"/>
+                    <field name="notice_admit_date"/>
+                    <field name="report_eligibility_flag"/>
+                    <field name="report_eligibility_date"/>
+                    <field name="release_info_code"/>
+                    <field name="preadmit_certification"/>
+                    <field name="verification_date"/>
+                    <field name="verification_by"/>
+                    <field name="agreement_type"/>
+                    <field name="bill_status"/>
+                    <field name="reserve_days"/>                        
+                    <field name="reserve_days_delay"/>                        
+                    <field name="company_plan_code"/>                        
+                    <field name="policy_number"/> 
+                    <separator/>
+                    <filter string="Sequence Number" name="sequence_number"/>
+                    <filter string="Identification Number" name="id_number"/>
+                    <filter string="Payer Code" name="payer_code"/>
+                    <filter string="Group Number of Insured Patient" name="group_number"/>
+                    <filter string="Group Name" name="group_name"/>
+                    <filter string="Insured's Group Employer ID" name="employerid"/>
+                    <filter string="Insured's Group Employer Name" name="employer_name"/>
+                    <filter string="Plan Effective Date/Time" name="plan_effective_date"/>
+                    <filter string="Plan Expiration Date/Time" name="plan_expiration_date"/>
+                    <filter string="Authorization Information" name="authorization_info"/>
+                    <filter string="Plan Type" name="plan_type"/>
+                    <filter string="First Name of Insured" name="insured_first_name"/>                        
+                    <filter string="Middle Name of Insured" name="insured_middle_name"/>                        
+                    <filter string="Last Name of Insured" name="insured_last_name"/>                        
+                    <filter string="Insured's Relationship to Patient" name="insured_relation"/>                        
+                    <filter string="Assignement of Benefits" name="assignment_benefits"/>                        
+                    <filter string="Coordinator of Benefits" name="coordinator_benefits"/>
+                    <filter string="Related Patient" name="patient_id"/>
+                    <filter string="Primary Payer" name="primary_payer"/>
+                    <filter string="Notice of Admission Code" name="notice_admit_code"/>
+                    <filter string="Notice of Admission Date/Time" name="notice_admit_date"/>
+                    <filter string="Report of Eligibility Flag" name="report_eligibility_flag"/>
+                    <filter string="Report of Eligibility Date/Time" name="report_eligibility_date"/>
+                    <filter string="Release Information Code" name="release_info_code"/>
+                    <filter string="Pre-admit Certification" name="preadmit_certification"/>
+                    <filter string="Verification Date/Time" name="verification_date"/>
+                    <filter string="Verification By" name="verification_by"/>
+                    <filter string="Type of Agreement" name="agreement_type"/>
+                    <filter string="Billing Status" name="bill_status"/>
+                    <filter string="Lifetime Reserve Days" name="reserve_days"/>                        
+                    <filter string="Delay before Lifetime Reserve Days" name="reserve_days_delay"/>                        
+                    <filter string="Company Plan Code" name="company_plan_code"/>                        
+                    <filter string="Policy Number" name="policy_number"/>  
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                    <separator/>
+                    <group expand="0" name="group_by" string="Group By">
+                        <filter string="Sequence Number" name="group_sequence_number" context="{'group_by': 'sequence_number'}"/>
+                        <filter string="Identification Number" name="group_id_number" context="{'group_by': 'id_number'}"/>
+                        <filter string="Payer Code" name="group_payer_code" context="{'group_by': 'payer_code'}"/>
+                        <filter string="Group Number of Insured Patient" name="group_group_number" context="{'group_by': 'group_number'}"/>
+                        <filter string="Group Name" name="group_group_name" context="{'group_by': 'group_name'}"/>
+                        <filter string="Insured's Group Employer ID" name="group_employerid" context="{'group_by': 'employerid'}"/>
+                        <filter string="Insured's Group Employer Name" name="group_employer_name" context="{'group_by': 'employer_name'}"/>
+                        <filter string="Plan Effective Date/Time" name="group_plan_effective_date" context="{'group_by': 'plan_effective_date'}"/>
+                        <filter string="Plan Expiration Date/Time" name="group_plan_expiration_date" context="{'group_by': 'plan_expiration_date'}"/>
+                        <filter string="Authorization Information" name="group_authorization_info" context="{'group_by': 'authorization_info'}"/>
+                        <filter string="Plan Type" name="group_plan_type" context="{'group_by': 'plan_type'}"/>
+                        <filter string="First Name of Insured" name="group_insured_first_name" context="{'group_by': 'insured_first_name'}"/>                        
+                        <filter string="Middle Name of Insured" name="group_insured_middle_name" context="{'group_by': 'insured_middle_name'}"/>                        
+                        <filter string="Last Name of Insured" name="group_insured_last_name" context="{'group_by': 'insured_last_name'}"/>                        
+                        <filter string="Insured's Relationship to Patient" name="group_insured_relation" context="{'group_by': 'insured_relation'}"/>                        
+                        <filter string="Assignement of Benefits" name="group_assignment_benefits" context="{'group_by': 'assignment_benefits'}"/>                        
+                        <filter string="Coordinator of Benefits" name="group_coordinator_benefits" context="{'group_by': 'coordinator_benefits'}"/>
+                        <filter string="Related Patient" name="group_patient_id" context="{'group_by': 'patient_id'}"/>
+                        <filter string="Primary Payer" name="group_primary_payer" context="{'group_by': 'primary_payer'}"/>
+                        <filter string="Notice of Admission Code" name="group_notice_admit_code" context="{'group_by': 'notice_admit_code'}"/>
+                        <filter string="Notice of Admission Date/Time" name="group_notice_admit_date" context="{'group_by': 'notice_admit_date'}"/>
+                        <filter string="Report of Eligibility Flag" name="group_report_eligibility_flag" context="{'group_by': 'report_eligibility_flag'}"/>
+                        <filter string="Report of Eligibility Date/Time" name="group_report_eligibility_date" context="{'group_by': 'report_eligibility_date'}"/>
+                        <filter string="Release Information Code" name="group_release_info_code" context="{'group_by': 'release_info_code'}"/>
+                        <filter string="Pre-admit Certification" name="group_preadmit_certification" context="{'group_by': 'preadmit_certification'}"/>
+                        <filter string="Verification Date/Time" name="group_verification_date" context="{'group_by': 'verification_date'}"/>
+                        <filter string="Verification By" name="group_verification_by" context="{'group_by': 'verification_by'}"/>
+                        <filter string="Type of Agreement" name="group_agreement_type" context="{'group_by': 'agreement_type'}"/>
+                        <filter string="Billing Status" name="group_bill_status" context="{'group_by': 'bill_status'}"/>
+                        <filter string="Lifetime Reserve Days" name="group_reserve_days" context="{'group_by': 'reserve_days'}"/>                        
+                        <filter string="Delay before Lifetime Reserve Days" name="group_reserve_days_delay" context="{'group_by': 'reserve_days_delay'}"/>                        
+                        <filter string="Company Plan Code" name="group_company_plan_code" context="{'group_by': 'company_plan_code'}"/>                        
+                        <filter string="Policy Number" name="group_policy_number" context="{'group_by': 'policy_number'}"/> 
+                    </group>
+                </search>
+            </field>
+        </record>
+    </data>
+</odoo>

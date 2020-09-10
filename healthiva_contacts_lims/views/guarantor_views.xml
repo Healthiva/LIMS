@@ -1,0 +1,118 @@
+<odoo>
+    <data>
+        <record id="view_guarantor_tree" model="ir.ui.view">
+            <field name="name">healthiva.guarantor.tree</field>
+            <field name="model">healthiva.guarantor</field>
+            <field name="priority">2</field>
+            <field name="arch" type="xml">
+                <tree string="Guarantors" multi_edit="1">
+                    <field name="last_name"/>
+                    <field name="first_name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="act_res_partner_2_guarantor" model="ir.actions.act_window">
+            <field name="name">Guarantors</field>
+            <field name="res_model">healthiva.guarantor</field>
+            <field name="view_mode">tree,form</field>
+            <field name="views">[("healthiva_contacts_lims.view_guarantor_tree","tree")]</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Record a new guarantor
+                </p>
+            </field>
+        </record>
+        
+        <record id="view_guarantor_form" model="ir.ui.view">
+            <field name="name">healthiva.guarantor.form</field>
+            <field name="model">healthiva.guarantor</field>
+            <field name="priority" eval="1"/>
+            <field name="arch" type="xml">
+                <form string="Guarantors">
+                <sheet>
+                    <div class="oe_button_box" name="button_box"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <div class="oe_title">
+                        <field name="active" invisible="1"/>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="first_name"/>
+                            <field name="middle_name"/>
+                            <field name="last_name"/>
+                            <field name="spouse_name"/>
+                            <field name="dob"/>
+                            <field name="guarantor_type"/>
+                        </group>
+                        <group>
+                            <field name="patient_relation"/>
+                            <field name="ssn"/>
+                            <field name="begin_date"/>
+                            <field name="end_date"/>
+                            <field name="priority"/>
+                            <field name="employer_name"/>    
+                        </group>
+                    </group>
+                    <notebook colspan="4">
+                        <page name='internal_notes' string="Internal Notes">
+                            <field name="comment" placeholder="Internal note..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_healthiva_guarantor_filter">
+            <field name="name">healthiva.guarantor.select</field>
+            <field name="model">healthiva.guarantor</field>
+            <field name="arch" type="xml">
+                <search string="Search Partner">
+                    <field name="first_name"/>
+                    <field name="middle_name"/>
+                    <field name="last_name"/>
+                    <field name="spouse_name"/>
+                    <field name="dob"/>
+                    <field name="guarantor_type"/>
+                    <field name="patient_relation"/>
+                    <field name="ssn"/>
+                    <field name="begin_date"/>
+                    <field name="end_date"/>
+                    <field name="priority"/>
+                    <field name="employer_name"/>    
+                    <separator/>
+                    <filter string="Guarantor First Name " name="first_name"/>
+                    <filter string="Guarantor Middle Name" name="middle_name"/>
+                    <filter string="Guarantor Last Name" name="last_name"/>
+                    <filter string="Spouse Name" name="spouse_name"/>
+                    <filter string="Guarantor DOB" name="dob"/>
+                    <filter string="Guarantor Type" name="guarantor_type"/>
+                    <filter string="Guarantor Relationship to Patient" name="patient_relation"/>
+                    <filter string="Guarantor ID Number" name="ssn"/>
+                    <filter string="Guarantor Date/Time - Begin" name="begin_date"/>
+                    <filter string="Guarantor Date/Time - End" name="end_date"/>
+                    <filter string="Guarantor Priority" name="priority"/>
+                    <filter string="Guarantor Employer Name" name="employer_name"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                    <separator/>
+                    <group expand="0" name="group_by" string="Group By">
+                        <filter string="Guarantor First Name " name="group_first_name" context="{'group_by': 'first_name'}"/> 
+                        <filter string="Guarantor Middle Name" name="group_middle_name" context="{'group_by': 'middle_name'}"/> 
+                        <filter string="Guarantor Last Name" name="group_last_name" context="{'group_by': 'last_name'}"/> 
+                        <filter string="Spouse Name" name="group_spouse_name" context="{'group_by': 'spouse_name'}"/> 
+                        <filter string="Guarantor DOB" name="group_dob" context="{'group_by': 'dob'}"/> 
+                        <filter string="Guarantor Type" name="group_guarantor_type" context="{'group_by': 'guarantor_type'}"/> 
+                        <filter string="Guarantor Relationship to Patient" name="group_patient_relation" context="{'group_by': 'patient_relation'}"/> 
+                        <filter string="Guarantor ID Number" name="group_ssn" context="{'group_by': 'ssn'}"/> 
+                        <filter string="Guarantor Date/Time - Begin" name="group_begin_date" context="{'group_by': 'begin_date'}"/> 
+                        <filter string="Guarantor Date/Time - End" name="group_end_date" context="{'group_by': 'end_date'}"/> 
+                        <filter string="Guarantor Priority" name="group_priority" context="{'group_by': 'priority'}"/> 
+                        <filter string="Guarantor Employer Name" name="group_employer_name" context="{'group_by': 'employer_name'}"/>                      
+                    </group>
+                </search>
+            </field>
+        </record>
+    </data>
+</odoo>

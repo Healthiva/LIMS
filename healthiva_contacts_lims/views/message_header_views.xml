@@ -1,0 +1,36 @@
+<odoo>
+    <data>
+        <record id="view_message_header_form" model="ir.ui.view">
+            <field name="name">healthiva.message_header.form</field>
+            <field name="model">healthiva.message_header</field>
+            <field name="priority" eval="1"/>
+            <field name="arch" type="xml">
+                <form string="Message Header">
+                    <sheet>
+                        <div class="oe_title">
+                            <field name="active" invisible="1"/>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="field_delimiter"/>
+                                <field name="sending_application"/>
+                                <field name="sending_facility"/>
+                                <field name="receiving_application"/>
+                                <field name="receiving_facility"/>                 
+                                <field name="receive_date"/>                 
+                            </group>
+                            <group>
+                                <field name="component_delimiter"/>
+                                <field name="security"/>
+                                <field name="message_type"/>
+                                <field name="message_controlid"/>
+                                <field name="processingid"/>
+                                <field name="hl7_version"/>        
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

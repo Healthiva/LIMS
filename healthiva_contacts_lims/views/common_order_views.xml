@@ -1,0 +1,162 @@
+<odoo>
+    <data>
+        <record id="view_common_order_tree" model="ir.ui.view">
+            <field name="name">healthiva.common_order.tree</field>
+            <field name="model">healthiva.common_order</field>
+            <field name="priority">2</field>
+            <field name="arch" type="xml">
+                <tree string="Common Orders" multi_edit="1">
+                    <field name="provider_last"/>
+                    <field name="provider_first"/>
+                </tree>
+            </field>
+        </record>
+        <record id="act_res_partner_2_common_order" model="ir.actions.act_window">
+            <field name="name">Common Orders</field>
+            <field name="res_model">healthiva.common_order</field>
+            <field name="view_mode">tree,form</field>
+            <field name="views">[("healthiva_contacts_lims.view_common_order_tree","tree")]</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Record a new common order
+                </p>
+            </field>
+        </record>
+        <record id="view_common_order_form" model="ir.ui.view">
+            <field name="name">healthiva.common_order.form</field>
+            <field name="model">healthiva.common_order</field>
+            <field name="priority" eval="1"/>
+            <field name="arch" type="xml">
+                <form string="Common Orders">
+                <sheet>
+                    <div class="oe_button_box" name="button_box"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <div class="oe_title">
+                        <field name="active" invisible="1"/>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="order_control"/>
+                            <field name="foreign_accessionid"/>
+                            <field name="applicationid"/>
+                            <field name="filler_accessionid"/>
+                            <field name="accession_owner"/>
+                            <field name="placer_number"/>
+                            <field name="order_status"/>
+                            <field name="response_flag"/>
+                            <field name="quantity_timing"/>
+                            <field name="parent"/>
+                            <field name="transaction_date"/>
+                            <field name="entered1"/>
+                            <field name="entered2"/>
+                        </group>
+                        <group>
+                            <field name="providerid"/>
+                            <field name="provider_last"/>
+                            <field name="provider_first"/>
+                            <field name="provider_middle"/>
+                            <field name="provider_suffix"/>
+                            <field name="provider_prefix"/>
+                            <field name="provider_degree"/>
+                            <field name="quantity_timing"/>
+                            <field name="source_table"/>
+                            <field name="enterer_location"/>
+                            <field name="phone"/>
+                        </group>
+                    </group>
+                    <notebook colspan="4">
+                        <page name='internal_notes' string="Internal Notes">
+                            <field name="comment" placeholder="Internal note..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_healthiva_common_order_filter">
+            <field name="name">healthiva.common_order.select</field>
+            <field name="model">healthiva.common_order</field>
+            <field name="arch" type="xml">
+                <search string="Search Partner">
+                    <field name="order_control"/>
+                    <field name="foreign_accessionid"/>
+                    <field name="applicationid"/>
+                    <field name="filler_accessionid"/>
+                    <field name="accession_owner"/>
+                    <field name="placer_number"/>
+                    <field name="order_status"/>
+                    <field name="response_flag"/>
+                    <field name="quantity_timing"/>
+                    <field name="parent"/>
+                    <field name="transaction_date"/>
+                    <field name="entered1"/>
+                    <field name="entered2"/>
+                    <field name="providerid"/>
+                    <field name="provider_last"/>
+                    <field name="provider_first"/>
+                    <field name="provider_middle"/>
+                    <field name="provider_suffix"/>
+                    <field name="provider_prefix"/>
+                    <field name="provider_degree"/>
+                    <field name="quantity_timing"/>
+                    <field name="source_table"/>
+                    <field name="enterer_location"/>
+                    <field name="phone"/> 
+                    <separator/>
+                    <filter string="Order Control" name="order_control"/>
+                    <filter string="Unique Foreign Accession or Specimen ID or Order ID" name="foreign_accessionid"/>
+                    <filter string="Application/Institution ID" name="applicationid"/>
+                    <filter string="Filler Accession ID" name="filler_accessionid"/>
+                    <filter string="Owner of Accession" name="accession_owner"/>
+                    <filter string="Placer Group Number" name="placer_number"/>
+                    <filter string="Order Status" name="order_status"/>
+                    <filter string="Response Flag" name="response_flag"/>
+                    <filter string="Quantity/Timing" name="quantity_timing"/>
+                    <filter string="Parent" name="parent"/>
+                    <filter string="Transaction Date" name="transaction_date"/>
+                    <filter string="Entered By 1" name="entered1"/>
+                    <filter string="Entered By 2" name="entered2"/>
+                    <filter string="Ordering Provider ID Number" name="providerid"/>
+                    <filter string="Ordering Provider Last Name" name="provider_last"/>
+                    <filter string="Ordering Provider First Initial" name="provider_first"/>
+                    <filter string="Ordering Provider Middle Initial" name="provider_middle"/>
+                    <filter string="Ordering Provider Suffix" name="provider_suffix"/>
+                    <filter string="Ordering Provider Prefix" name="provider_prefix"/>
+                    <filter string="Ordering Provider Degree" name="provider_degree"/>
+                    <filter string="Source Table" name="source_table"/>
+                    <filter string="Enterer's Location" name="enterer_location"/>
+                    <filter string="Callback Phone Number" name="phone"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                    <separator/>
+                    <group expand="0" name="group_by" string="Group By">
+                        <filter string="Order Control" name="group_order_control" context="{'group_by': 'order_control'}"/> 
+                        <filter string="Unique Foreign Accession or Specimen ID or Order ID" name="group_foreign_accessionid" context="{'group_by': 'foreign_accessionid'}"/> 
+                        <filter string="Application/Institution ID" name="group_applicationid" context="{'group_by': 'applicationid'}"/> 
+                        <filter string="Filler Accession ID" name="group_filler_accessionid" context="{'group_by': 'filler_accessionid'}"/> 
+                        <filter string="Owner of Accession" name="group_accession_owner" context="{'group_by': 'accession_owner'}"/> 
+                        <filter string="Placer Group Number" name="group_placer_number" context="{'group_by': 'placer_number'}"/> 
+                        <filter string="Order Status" name="group_order_status" context="{'group_by': 'order_status'}"/> 
+                        <filter string="Response Flag" name="group_response_flag" context="{'group_by': 'response_flag'}"/> 
+                        <filter string="Quantity/Timing" name="group_quantity_timing" context="{'group_by': 'quantity_timing'}"/> 
+                        <filter string="Parent" name="group_parent" context="{'group_by': 'parent'}"/> 
+                        <filter string="Transaction Date" name="group_transaction_date" context="{'group_by': 'transaction_date'}"/> 
+                        <filter string="Entered By 1" name="group_entered1" context="{'group_by': 'entered1'}"/> 
+                        <filter string="Entered By 2" name="group_entered2" context="{'group_by': 'entered2'}"/> 
+                        <filter string="Ordering Provider ID Number" name="group_providerid" context="{'group_by': 'providerid'}"/> 
+                        <filter string="Ordering Provider Last Name" name="group_provider_last" context="{'group_by': 'provider_last'}"/> 
+                        <filter string="Ordering Provider First Initial" name="group_provider_first" context="{'group_by': 'provider_first'}"/> 
+                        <filter string="Ordering Provider Middle Initial" name="group_provider_middle" context="{'group_by': 'provider_middle'}"/> 
+                        <filter string="Ordering Provider Suffix" name="group_provider_suffix" context="{'group_by': 'provider_suffix'}"/> 
+                        <filter string="Ordering Provider Prefix" name="group_provider_prefix" context="{'group_by': 'provider_prefix'}"/> 
+                        <filter string="Ordering Provider Degree" name="group_provider_degree" context="{'group_by': 'provider_degree'}"/> 
+                        <filter string="Source Table" name="group_source_table" context="{'group_by': 'source_table'}"/> 
+                        <filter string="Enterer's Location" name="group_enterer_location" context="{'group_by': 'enterer_location'}"/> 
+                        <filter string="Callback Phone Number" name="group_phone" context="{'group_by': 'phone'}"/>              
+                    </group>
+                </search>
+            </field>
+        </record>
+    </data>
+</odoo>
