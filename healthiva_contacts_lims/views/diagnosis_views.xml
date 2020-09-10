@@ -1,0 +1,92 @@
+<odoo>
+    <data>
+        <record id="view_diagnosis_tree" model="ir.ui.view">
+            <field name="name">healthiva.diagnosis.tree</field>
+            <field name="model">healthiva.diagnosis</field>
+            <field name="priority">2</field>
+            <field name="arch" type="xml">
+                <tree string="Diagnosises" multi_edit="1">
+                    <field name="sequence_number"/>
+                    <field name="code_system"/>
+                    <field name="code_method"/>
+                </tree>
+            </field>
+        </record>
+        <record id="act_res_partner_2_diagnosis" model="ir.actions.act_window">
+            <field name="name">Diagnosises</field>
+            <field name="res_model">healthiva.diagnosis</field>
+            <field name="view_mode">tree,form</field>
+            <field name="views">[("healthiva_contacts_lims.view_diagnosis_tree","tree")]</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Record a new diagnosis
+                </p>
+            </field>
+        </record>
+        <record id="view_diagnosis_form" model="ir.ui.view">
+            <field name="name">healthiva.diagnosis.form</field>
+            <field name="model">healthiva.diagnosis</field>
+            <field name="priority" eval="1"/>
+            <field name="arch" type="xml">
+                <form string="Diagnosises">
+                <sheet>
+                    <div class="oe_button_box" name="button_box"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <div class="oe_title">
+                        <field name="active" invisible="1"/>
+                    </div>
+                    <div class="oe_title">
+                        <field name="active" invisible="1"/>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="sequence_number"/>
+                            <field name="code_method"/>
+                            <field name="code_identifier"/>
+                        </group>
+                        <group>
+                            <field name="code_system"/>
+                            <field name="code_text"/>
+                        </group>
+                    </group>
+                    <notebook colspan="4">
+                        <page name='internal_notes' string="Internal Notes">
+                            <field name="comment" placeholder="Internal note..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_healthiva_diagnosis_filter">
+            <field name="name">healthiva.diagnosis.select</field>
+            <field name="model">healthiva.diagnosis</field>
+            <field name="arch" type="xml">
+                <search string="Search Partner">
+                    <field name="sequence_number"/>
+                    <field name="code_method"/>
+                    <field name="code_identifier"/>
+                    <field name="code_system"/>
+                    <field name="code_text"/>   
+                    <separator/>
+                    <filter string="Sequence Number" name="sequence_number"/>
+                    <filter string="Code Method" name="code_method"/>
+                    <filter string="Code Identifier" name="code_identifier"/>
+                    <filter string="Name of Coding System" name="code_system"/>
+                    <filter string="Code Text Description" name="code_text"/>   
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                    <separator/>
+                    <group expand="0" name="group_by" string="Group By">
+                        <filter string="Sequence Number" name="group_sequence_number" context="{'group_by': 'sequence_number'}"/> 
+                        <filter string="Code Method" name="group_code_method" context="{'group_by': 'code_method'}"/> 
+                        <filter string="Code Identifier" name="group_code_identifier" context="{'group_by': 'code_identifier'}"/> 
+                        <filter string="Name of Coding System" name="group_code_system" context="{'group_by': 'code_system'}"/> 
+                        <filter string="Code Text Description" name="group_code_text" context="{'group_by': 'code_text'}"/>                        
+                    </group>
+                </search>
+            </field>
+        </record>
+    </data>
+</odoo>

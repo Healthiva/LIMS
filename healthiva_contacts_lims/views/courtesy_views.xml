@@ -1,0 +1,81 @@
+<odoo>
+    <data>
+        <record id="view_courtesy_tree" model="ir.ui.view">
+            <field name="name">healthiva.courtesy.tree</field>
+            <field name="model">healthiva.courtesy</field>
+            <field name="priority">2</field>
+            <field name="arch" type="xml">
+                <tree string="Courtesy Copies" multi_edit="1">
+                    <field name="copy_type"/>
+                    <field name="copy_context"/>
+                    <field name="attn_line"/>
+                </tree>
+            </field>
+        </record>
+        <record id="act_res_partner_2_courtesy" model="ir.actions.act_window">
+            <field name="name">Courtesy Copies</field>
+            <field name="res_model">healthiva.courtesy</field>
+            <field name="view_mode">tree,form</field>
+            <field name="views">[("healthiva_contacts_lims.view_courtesy_tree","tree")]</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Record a new courtesy copy
+                </p>
+            </field>
+        </record>
+        <record id="view_courtesy_form" model="ir.ui.view">
+            <field name="name">healthiva.courtesy.form</field>
+            <field name="model">healthiva.courtesy</field>
+            <field name="priority" eval="1"/>
+            <field name="arch" type="xml">
+                <form string="Courtesy Copies">
+                <sheet>
+                    <div class="oe_button_box" name="button_box"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <div class="oe_title">
+                        <field name="active" invisible="1"/>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="copy_type"/>
+                            <field name="attn_line"/>
+                        </group>
+                        <group>
+                            <field name="copy_context"/>
+                        </group>
+                    </group>
+                    <notebook colspan="4">
+                        <page name='internal_notes' string="Internal Notes">
+                            <field name="comment" placeholder="Internal note..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_healthiva_courtesy_filter">
+            <field name="name">healthiva.courtesy.select</field>
+            <field name="model">healthiva.courtesy</field>
+            <field name="arch" type="xml">
+                <search string="Search Partner">
+                    <field name="copy_type"/>
+                    <field name="attn_line"/>
+                    <field name="copy_context"/>
+                    <separator/>
+                    <filter string="Type" name="copy_type"/>
+                    <filter string="Text" name="attn_line"/>
+                    <filter string="Attention Line" name="copy_context"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                    <separator/>
+                    <group expand="0" name="group_by" string="Group By">
+                        <filter string="Type" name="group_copy_type" context="{'group_by': 'copy_type'}"/> 
+                        <filter string="Text" name="group_attn_line" context="{'group_by': 'attn_line'}"/> 
+                        <filter string="Attention Line" name="group_copy_context" context="{'group_by': 'copy_context'}"/>                
+                    </group>
+                </search>
+            </field>
+        </record>
+    </data>
+</odoo>

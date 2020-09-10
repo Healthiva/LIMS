@@ -1,0 +1,12 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_healthiva_blood_lead,healthiva.blood_lead,model_healthiva_blood_lead,base.group_user,1,1,1,1
+access_healthiva_common_order,healthiva.common_order,model_healthiva_common_order,base.group_user,1,1,1,1
+access_healthiva_courtesy,healthiva.courtesy,model_healthiva_courtesy,base.group_user,1,1,1,1
+access_healthiva_diagnosis,healthiva.diagnosis,model_healthiva_diagnosis,base.group_user,1,1,1,1
+access_healthiva_general_info,healthiva.general_info,model_healthiva_general_info,base.group_user,1,1,1,1
+access_healthiva_guarantor,healthiva.guarantor,model_healthiva_guarantor,base.group_user,1,1,1,1
+access_healthiva_insurance,healthiva.insurance,model_healthiva_insurance,base.group_user,1,1,1,1
+access_healthiva_message_header,healthiva.message_header,model_healthiva_message_header,base.group_user,1,1,1,1
+access_healthiva_observation,healthiva.observation,model_healthiva_observation,base.group_user,1,1,1,1
+access_healthiva_provider,healthiva.provider,model_healthiva_provider,base.group_user,1,1,1,1
+access_healthiva_result,healthiva.result,model_healthiva_result,base.group_user,1,1,1,1
