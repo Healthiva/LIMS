@@ -5,10 +5,11 @@
             <field name="model">healthiva.result</field>
             <field name="priority">2</field>
             <field name="arch" type="xml">
-                <tree string="Results" multi_edit="1">
+                <tree string="Results" multi_edit="1" decoration-info="status=='neg'" decoration-danger="status=='pos'">
                     <field name="sequence_number"/>
                     <field name="performing_names"/>
                     <field name="result_status"/>
+                    <field name="status"/>
                 </tree>
             </field>
         </record>
@@ -16,12 +17,64 @@
         <record id="act_res_partner_2_result" model="ir.actions.act_window">
             <field name="name">Results</field>
             <field name="res_model">healthiva.result</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,graph,pivot,dashboard</field>
             <field name="views">[("healthiva_contacts_lims.view_result_tree","tree")]</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     Record a new test result
                 </p>
+            </field>
+        </record>
+
+        <record id="view_result_graph" model="ir.ui.view">
+            <field name="name">healthiva.result.graph</field>
+            <field name="model">healthiva.result</field>
+            <field name="priority" eval="1"/>
+            <field name="arch" type="xml">
+                <graph string="Result Statistics" type="bar">
+                    <field name="status"/>
+                    <field name="sequence_number"/>
+                    <field name="value_type"/>
+                    <field name="observation_identifier"/>
+                    <field name="observation_text"/>
+                    <field name="observation_date"/>
+                    <field name="coding_system_name1"/>
+                    <field name="alternate_identifier"/>
+                    <field name="alternate_observation_text"/>
+                    <field name="alternate_observation_system"/>
+                    <field name="observation_subid"/>
+                    <field name="observation_value"/>
+                    <field name="date_type"/>                        
+                    <field name="date_subtype"/>                        
+                    <field name="encoding"/>                        
+                    <field name="data_text"/>                        
+                    <field name="coding_system"/>                        
+                    <field name="identifier"/>                        
+                    <field name="result_text"/>                        
+                    <field name="coding_system_name1"/>
+                    <field name="patient_id"/>
+                    <field name="ref_ranges"/>
+                    <field name="abnormal_flags"/>
+                    <field name="probability"/>
+                    <field name="abnormal_test_nature"/>
+                    <field name="result_status"/>
+                    <field name="ref_range_update_date"/>
+                    <field name="access_checks"/>
+                    <field name="producerid"/>
+                    <field name="observer"/>
+                    <field name="observation_method"/>
+                    <field name="equipment_identifier"/>
+                    <field name="analysis_date"/>                        
+                    <field name="reserver_hamorizing1"/>                        
+                    <field name="reserver_hamorizing2"/>                        
+                    <field name="reserver_hamorizing3"/>                        
+                    <field name="performing_names"/>         
+                    <field name="performing_address"/>         
+                    <field name="performing_director"/>         
+                    <field name="release_category"/>         
+                    <field name="route_cause"/>         
+                    <field name="local_process_control"/>    
+                </graph>
             </field>
         </record>
 
@@ -31,65 +84,68 @@
             <field name="priority" eval="1"/>
             <field name="arch" type="xml">
                 <form string="Results">
-                <sheet>
-                    <div class="oe_button_box" name="button_box"/>
-                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
-                    <div class="oe_title">
+                    <sheet>
                         <field name="active" invisible="1"/>
+                        <div class="oe_button_box" name="button_box"/>
+                        <group>
+                            <group>
+                                <field name="status"/>
+                                <field name="sequence_number"/>
+                                <field name="value_type"/>
+                                <field name="observation_identifier"/>
+                                <field name="observation_text"/>
+                                <field name="observation_date"/>
+                                <field name="coding_system_name1"/>
+                                <field name="alternate_identifier"/>
+                                <field name="alternate_observation_text"/>
+                                <field name="alternate_observation_system"/>
+                                <field name="observation_subid"/>
+                                <field name="observation_value"/>
+                                <field name="date_type"/>                        
+                                <field name="date_subtype"/>                        
+                                <field name="encoding"/>                        
+                                <field name="data_text"/>                        
+                                <field name="coding_system"/>                        
+                                <field name="identifier"/>                        
+                                <field name="result_text"/>                        
+                                <field name="coding_system_name1"/>
+                                <field name="patient_id"/>
+                            </group>
+                            <group>
+                                <field name="ref_ranges"/>
+                                <field name="abnormal_flags"/>
+                                <field name="probability"/>
+                                <field name="abnormal_test_nature"/>
+                                <field name="result_status"/>
+                                <field name="ref_range_update_date"/>
+                                <field name="access_checks"/>
+                                <field name="producerid"/>
+                                <field name="observer"/>
+                                <field name="observation_method"/>
+                                <field name="equipment_identifier"/>
+                                <field name="analysis_date"/>                        
+                                <field name="reserver_hamorizing1"/>                        
+                                <field name="reserver_hamorizing2"/>                        
+                                <field name="reserver_hamorizing3"/>                        
+                                <field name="performing_names"/>         
+                                <field name="performing_address"/>         
+                                <field name="performing_director"/>         
+                                <field name="release_category"/>         
+                                <field name="route_cause"/>         
+                                <field name="local_process_control"/>         
+                            </group>
+                        </group>
+                        <notebook colspan="4">
+                            <page name='internal_notes' string="Internal Notes">
+                                <field name="comment" placeholder="Internal note..."/>
+                            </page>
+                        </notebook>
+                    </sheet>
+
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
                     </div>
-                    <group>
-                        <group>
-                            <field name="sequence_number"/>
-                            <field name="value_type"/>
-                            <field name="observation_identifier"/>
-                            <field name="observation_text"/>
-                            <field name="observation_date"/>
-                            <field name="coding_system_name1"/>
-                            <field name="alternate_identifier"/>
-                            <field name="alternate_observation_text"/>
-                            <field name="alternate_observation_system"/>
-                            <field name="observation_subid"/>
-                            <field name="observation_value"/>
-                            <field name="date_type"/>                        
-                            <field name="date_subtype"/>                        
-                            <field name="encoding"/>                        
-                            <field name="data_text"/>                        
-                            <field name="coding_system"/>                        
-                            <field name="identifier"/>                        
-                            <field name="result_text"/>                        
-                            <field name="coding_system_name1"/>
-                            <field name="patient_id"/>
-                        </group>
-                        <group>
-                            <field name="ref_ranges"/>
-                            <field name="abnormal_flags"/>
-                            <field name="probability"/>
-                            <field name="abnormal_test_nature"/>
-                            <field name="result_status"/>
-                            <field name="ref_range_update_date"/>
-                            <field name="access_checks"/>
-                            <field name="producerid"/>
-                            <field name="observer"/>
-                            <field name="observation_method"/>
-                            <field name="equipment_identifier"/>
-                            <field name="analysis_date"/>                        
-                            <field name="reserver_hamorizing1"/>                        
-                            <field name="reserver_hamorizing2"/>                        
-                            <field name="reserver_hamorizing3"/>                        
-                            <field name="performing_names"/>         
-                            <field name="performing_address"/>         
-                            <field name="performing_director"/>         
-                            <field name="release_category"/>         
-                            <field name="route_cause"/>         
-                            <field name="local_process_control"/>         
-                        </group>
-                    </group>
-                    <notebook colspan="4">
-                        <page name='internal_notes' string="Internal Notes">
-                            <field name="comment" placeholder="Internal note..."/>
-                        </page>
-                    </notebook>
-                </sheet>
                 </form>
             </field>
         </record>

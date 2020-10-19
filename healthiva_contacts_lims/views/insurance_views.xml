@@ -16,7 +16,7 @@
         <record id="act_res_partner_2_insurance" model="ir.actions.act_window">
             <field name="name">Insurances</field>
             <field name="res_model">healthiva.insurance</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,graph,pivot,dashboard</field>
             <field name="views">[("healthiva_contacts_lims.view_insurance_tree","tree")]</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
@@ -31,57 +31,72 @@
             <field name="priority" eval="1"/>
             <field name="arch" type="xml">
                 <form string="Insurances">
-                <sheet>
-                    <div class="oe_button_box" name="button_box"/>
-                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
-                    <div class="oe_title">
+                    <sheet>
                         <field name="active" invisible="1"/>
+                        <div class="oe_button_box" name="button_box"/>
+                        <group>
+                            <group>
+                                <field name="sequence_number"/>
+                                <field name="id_number"/>
+                                <field name="payer_code"/>
+                                <field name="company_name"/>
+                                <field name="company_address1"/>
+                                <field name="company_address2"/>
+                                <field name="company_address_city"/>
+                                <field name="company_address_state"/>
+                                <field name="company_address_zip"/>
+                                <field name="contact_name"/>
+                                <field name="phone"/>
+                                <field name="group_number"/>
+                                <field name="group_name"/>
+                                <field name="employerid"/>
+                                <field name="employer_name"/>
+                                <field name="plan_effective_date"/>
+                                <field name="plan_expiration_date"/>
+                                <field name="authorization_info"/>
+                                <field name="plan_type"/>
+                                <field name="reserve_days"/>                        
+                                <field name="reserve_days_delay"/>                        
+                                <field name="company_plan_code"/>                        
+                                <field name="policy_number"/>  
+                            </group>
+                            <group>
+                                <field name="insured_first_name"/>                        
+                                <field name="insured_middle_name"/>
+                                <field name="insured_last_name"/>
+                                <field name="insured_relation"/>
+                                <field name="insured_dob"/>
+                                <field name="insured_address1"/>
+                                <field name="insured_address2"/>
+                                <field name="insured_address_city"/>
+                                <field name="insured_address_state"/>
+                                <field name="insured_address_zip"/>
+                                <field name="assignment_benefits"/>                        
+                                <field name="coordinator_benefits"/>
+                                <field name="patient_id"/>
+                                <field name="primary_payer"/>
+                                <field name="notice_admit_code"/>
+                                <field name="notice_admit_date"/>
+                                <field name="report_eligibility_flag"/>
+                                <field name="report_eligibility_date"/>
+                                <field name="release_info_code"/>
+                                <field name="preadmit_certification"/>
+                                <field name="verification_date"/>
+                                <field name="verification_by"/>
+                                <field name="agreement_type"/>
+                                <field name="bill_status"/>    
+                            </group>
+                        </group>
+                        <notebook colspan="4">
+                            <page name='internal_notes' string="Internal Notes">
+                                <field name="comment" placeholder="Internal note..."/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
                     </div>
-                    <group>
-                        <group>
-                            <field name="sequence_number"/>
-                            <field name="id_number"/>
-                            <field name="payer_code"/>
-                            <field name="group_number"/>
-                            <field name="group_name"/>
-                            <field name="employerid"/>
-                            <field name="employer_name"/>
-                            <field name="plan_effective_date"/>
-                            <field name="plan_expiration_date"/>
-                            <field name="authorization_info"/>
-                            <field name="plan_type"/>
-                            <field name="insured_first_name"/>                        
-                            <field name="insured_middle_name"/>                        
-                            <field name="insured_last_name"/>                        
-                            <field name="insured_relation"/>                        
-                            <field name="assignment_benefits"/>                        
-                            <field name="coordinator_benefits"/>
-                            <field name="patient_id"/>
-                        </group>
-                        <group>
-                            <field name="primary_payer"/>
-                            <field name="notice_admit_code"/>
-                            <field name="notice_admit_date"/>
-                            <field name="report_eligibility_flag"/>
-                            <field name="report_eligibility_date"/>
-                            <field name="release_info_code"/>
-                            <field name="preadmit_certification"/>
-                            <field name="verification_date"/>
-                            <field name="verification_by"/>
-                            <field name="agreement_type"/>
-                            <field name="bill_status"/>
-                            <field name="reserve_days"/>                        
-                            <field name="reserve_days_delay"/>                        
-                            <field name="company_plan_code"/>                        
-                            <field name="policy_number"/>       
-                        </group>
-                    </group>
-                    <notebook colspan="4">
-                        <page name='internal_notes' string="Internal Notes">
-                            <field name="comment" placeholder="Internal note..."/>
-                        </page>
-                    </notebook>
-                </sheet>
                 </form>
             </field>
         </record>
@@ -94,6 +109,14 @@
                     <field name="sequence_number"/>
                     <field name="id_number"/>
                     <field name="payer_code"/>
+                    <field name="company_name"/>
+                    <field name="company_address1"/>
+                    <field name="company_address2"/>
+                    <field name="company_address_city"/>
+                    <field name="company_address_state"/>
+                    <field name="company_address_zip"/>
+                    <field name="contact_name"/>
+                    <field name="phone"/>
                     <field name="group_number"/>
                     <field name="group_name"/>
                     <field name="employerid"/>
@@ -103,9 +126,15 @@
                     <field name="authorization_info"/>
                     <field name="plan_type"/>
                     <field name="insured_first_name"/>                        
-                    <field name="insured_middle_name"/>                        
-                    <field name="insured_last_name"/>                        
-                    <field name="insured_relation"/>                        
+                    <field name="insured_middle_name"/>
+                    <field name="insured_last_name"/>
+                    <field name="insured_relation"/>
+                    <field name="insured_dob"/>
+                    <field name="insured_address1"/>
+                    <field name="insured_address2"/>
+                    <field name="insured_address_city"/>
+                    <field name="insured_address_state"/>
+                    <field name="insured_address_zip"/>
                     <field name="assignment_benefits"/>                        
                     <field name="coordinator_benefits"/>
                     <field name="patient_id"/>
@@ -123,11 +152,19 @@
                     <field name="reserve_days"/>                        
                     <field name="reserve_days_delay"/>                        
                     <field name="company_plan_code"/>                        
-                    <field name="policy_number"/> 
+                    <field name="policy_number"/>   
                     <separator/>
                     <filter string="Sequence Number" name="sequence_number"/>
                     <filter string="Identification Number" name="id_number"/>
                     <filter string="Payer Code" name="payer_code"/>
+                    <filter string="Company Name" name="company_name"/>
+                    <filter string="Company Address Line 1" name="company_address1"/>
+                    <filter string="Company Address Line 2" name="company_address2"/>
+                    <filter string="Company Address City" name="company_address_city"/>
+                    <filter string="Company Address State" name="company_address_state"/>
+                    <filter string="Company Address Zip Code" name="company_address_zip"/>
+                    <filter string="Company Contact Name" name="contact_name"/>
+                    <filter string="Phone Number" name="phone"/>
                     <filter string="Group Number of Insured Patient" name="group_number"/>
                     <filter string="Group Name" name="group_name"/>
                     <filter string="Insured's Group Employer ID" name="employerid"/>
@@ -139,7 +176,13 @@
                     <filter string="First Name of Insured" name="insured_first_name"/>                        
                     <filter string="Middle Name of Insured" name="insured_middle_name"/>                        
                     <filter string="Last Name of Insured" name="insured_last_name"/>                        
-                    <filter string="Insured's Relationship to Patient" name="insured_relation"/>                        
+                    <filter string="Insured's Relationship to Patient" name="insured_relation"/>
+                    <filter string="Insured's Date of Birth" name="insured_dob"/>
+                    <filter string="Insured's Address Line 1" name="insured_address1"/>
+                    <filter string="Insured's Address Line 2" name="insured_address2"/>
+                    <filter string="Insured's Address City" name="insured_address_city"/>
+                    <filter string="Insured's Address State" name="insured_address_state"/>
+                    <filter string="Insured's Address Zip Code" name="insured_address_zip"/>                      
                     <filter string="Assignement of Benefits" name="assignment_benefits"/>                        
                     <filter string="Coordinator of Benefits" name="coordinator_benefits"/>
                     <filter string="Related Patient" name="patient_id"/>
@@ -165,6 +208,14 @@
                         <filter string="Sequence Number" name="group_sequence_number" context="{'group_by': 'sequence_number'}"/>
                         <filter string="Identification Number" name="group_id_number" context="{'group_by': 'id_number'}"/>
                         <filter string="Payer Code" name="group_payer_code" context="{'group_by': 'payer_code'}"/>
+                        <filter string="Company Name" name="group_company_name" context="{'group_by': 'company_name' }"/>
+                        <filter string="Company Address Line 1" name="group_company_address1" context="{'group_by': 'company_address1' }"/>
+                        <filter string="Company Address Line 2" name="group_company_address2" context="{'group_by': 'company_address2' }"/>
+                        <filter string="Company Address City" name="group_company_address_city" context="{'group_by': 'company_address_city' }"/>
+                        <filter string="Company Address State" name="group_company_address_state" context="{'group_by': 'company_address_state' }"/>
+                        <filter string="Company Address Zip Code" name="group_company_address_zip" context="{'group_by': 'company_address_zip' }"/>
+                        <filter string="Company Contact Name" name="group_contact_name" context="{'group_by': 'contact_name' }"/>
+                        <filter string="Phone Number" name="group_phone" context="{'group_by': 'phone' }"/>
                         <filter string="Group Number of Insured Patient" name="group_group_number" context="{'group_by': 'group_number'}"/>
                         <filter string="Group Name" name="group_group_name" context="{'group_by': 'group_name'}"/>
                         <filter string="Insured's Group Employer ID" name="group_employerid" context="{'group_by': 'employerid'}"/>
@@ -176,7 +227,13 @@
                         <filter string="First Name of Insured" name="group_insured_first_name" context="{'group_by': 'insured_first_name'}"/>                        
                         <filter string="Middle Name of Insured" name="group_insured_middle_name" context="{'group_by': 'insured_middle_name'}"/>                        
                         <filter string="Last Name of Insured" name="group_insured_last_name" context="{'group_by': 'insured_last_name'}"/>                        
-                        <filter string="Insured's Relationship to Patient" name="group_insured_relation" context="{'group_by': 'insured_relation'}"/>                        
+                        <filter string="Insured's Relationship to Patient" name="group_insured_relation" context="{'group_by': 'insured_relation'}"/>
+                        <filter string="Insured's Date of Birth" name="group_insured_dob" context="{'group_by': 'insured_dob' }"/>
+                        <filter string="Insured's Address Line 1" name="group_insured_address1" context="{'group_by': 'insured_address1' }"/>
+                        <filter string="Insured's Address Line 2" name="group_insured_address2" context="{'group_by': 'insured_address2' }"/>
+                        <filter string="Insured's Address City" name="group_insured_address_city" context="{'group_by': 'insured_address_city' }"/>
+                        <filter string="Insured's Address State" name="group_insured_address_state" context="{'group_by': 'insured_address_state' }"/>
+                        <filter string="Insured's Address Zip Code" name="group_insured_address_zip" context="{'group_by': 'insured_address_zip' }"/>                             
                         <filter string="Assignement of Benefits" name="group_assignment_benefits" context="{'group_by': 'assignment_benefits'}"/>                        
                         <filter string="Coordinator of Benefits" name="group_coordinator_benefits" context="{'group_by': 'coordinator_benefits'}"/>
                         <filter string="Related Patient" name="group_patient_id" context="{'group_by': 'patient_id'}"/>

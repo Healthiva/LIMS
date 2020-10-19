@@ -14,7 +14,7 @@
         <record id="act_res_partner_2_observation" model="ir.actions.act_window">
             <field name="name">Observations</field>
             <field name="res_model">healthiva.observation</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,graph,pivot,dashboard</field>
             <field name="views">[("healthiva_contacts_lims.view_observation_tree","tree")]</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
@@ -28,69 +28,72 @@
             <field name="priority" eval="1"/>
             <field name="arch" type="xml">
                 <form string="Observations">
-                <sheet>
-                    <div class="oe_button_box" name="button_box"/>
-                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
-                    <div class="oe_title">
+                    <sheet>
                         <field name="active" invisible="1"/>
-                    </div>
-                    <div class="oe_title">
-                        <field name="provider_prefix"/>
-                        <field name="provider_first"/>
-                        <field name="provider_suffix"/>
-                        <field name="provider_middle"/>
-                        <field name="provider_last"/>
-                        <field name="provider_degree"/>
-                    </div>
-                    <group>
+                        <div class="oe_button_box" name="button_box"/>
+                        <div class="oe_title">
+                            <field name="provider_prefix"/>
+                            <field name="provider_first"/>
+                            <field name="provider_suffix"/>
+                            <field name="provider_middle"/>
+                            <field name="provider_last"/>
+                            <field name="provider_degree"/>
+                        </div>
                         <group>
-                            <field name="providerid"/>
-                            <field name="sequence_number"/>
-                            <field name="foreign_accessionid"/>
-                            <field name="foreign_appid"/>
-                            <field name="internal_accessionid"/>
-                            <field name="internal_appid"/>
-                            <field name="battery_identifier"/>
-                            <field name="priority"/>
-                            <field name="specimen_collect_date"/>
-                            <field name="specimen_collect_end_time"/>
-                            <field name="collection_volume"/>
-                            <field name="collection_uom"/>
-                            <field name="collector_identifier"/>                        
-                            <field name="action_code"/>                        
-                            <field name="danger_code"/>                        
-                            <field name="parent_order_link"/>                        
-                            <field name="clinic_info"/>                        
-                            <field name="clinic_info_back"/>                        
+                            <group>
+                                <field name="providerid"/>
+                                <field name="sequence_number"/>
+                                <field name="foreign_accessionid"/>
+                                <field name="foreign_appid"/>
+                                <field name="internal_accessionid"/>
+                                <field name="internal_appid"/>
+                                <field name="battery_identifier"/>
+                                <field name="battery_text"/>
+                                <field name="coding_system1"/>
+                                <field name="priority"/>
+                                <field name="specimen_collect_date"/>
+                                <field name="specimen_collect_end_time"/>
+                                <field name="collection_volume"/>
+                                <field name="collection_uom"/>
+                                <field name="collector_identifier"/>                        
+                                <field name="action_code"/>                        
+                                <field name="danger_code"/>                        
+                                <field name="parent_order_link"/>                        
+                                <field name="clinic_info"/>                        
+                                <field name="clinic_info_back"/>                        
+                            </group>
+                            <group>
+                                <field name="providerid"/>
+                                <field name="specimen_receipt_date"/>
+                                <field name="specimen_source"/>
+                                <field name="source_table"/>
+                                <field name="phone"/>
+                                <field name="requester_field2"/>
+                                <field name="producer_field1"/>
+                                <field name="producer_field2"/>
+                                <field name="microbiology_organism"/>
+                                <field name="coding_system2"/>
+                                <field name="report_date"/>
+                                <field name="producer_charge"/>                        
+                                <field name="producer_sectionid"/>                        
+                                <field name="order_result_status"/>                        
+                                <field name="organism_link"/>                        
+                                <field name="subid"/>         
+                                <field name="quantity_timing"/>         
+                                <field name="courtesy_copies"/>         
+                            </group>
                         </group>
-                        <group>
-                            <field name="providerid"/>
-                            <field name="specimen_receipt_date"/>
-                            <field name="specimen_source"/>
-                            <field name="source_table"/>
-                            <field name="phone"/>
-                            <field name="requester_field2"/>
-                            <field name="producer_field1"/>
-                            <field name="producer_field2"/>
-                            <field name="microbiology_organism"/>
-                            <field name="coding_system"/>
-                            <field name="report_date"/>
-                            <field name="producer_charge"/>                        
-                            <field name="producer_sectionid"/>                        
-                            <field name="order_result_status"/>                        
-                            <field name="organism_link"/>                        
-                            <field name="subid"/>         
-                            <field name="quantity_timing"/>         
-                            <field name="courtesy_copies"/>         
-                        </group>
-                    </group>
-                    <notebook colspan="4">
-                        <page name='internal_notes' string="Internal Notes">
-                            <field name="comment" placeholder="Internal note..."/>
-                        </page>
-                    </notebook>
-                </sheet>
-                </form>
+                        <notebook colspan="4">
+                            <page name='internal_notes' string="Internal Notes">
+                                <field name="comment" placeholder="Internal note..."/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    </form>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
             </field>
         </record>
 
@@ -112,6 +115,7 @@
                     <field name="internal_accessionid"/>
                     <field name="internal_appid"/>
                     <field name="battery_identifier"/>
+                    <field name="battery_text"/>
                     <field name="priority"/>
                     <field name="specimen_collect_date"/>
                     <field name="specimen_collect_end_time"/>
@@ -131,7 +135,8 @@
                     <field name="producer_field1"/>
                     <field name="producer_field2"/>
                     <field name="microbiology_organism"/>
-                    <field name="coding_system"/>
+                    <field name="coding_system1"/>
+                    <field name="coding_system2"/>
                     <field name="report_date"/>
                     <field name="producer_charge"/>                        
                     <field name="producer_sectionid"/>                        
@@ -154,6 +159,7 @@
                     <filter string="Internal Accession ID" name="internal_accessionid"/>
                     <filter string="Internal Application Institution ID" name="internal_appid"/>
                     <filter string="Observation Battery Identifier" name="battery_identifier"/>
+                    <filter string="Observation Battery Text" name="battery_text"/>
                     <filter string="Priority" name="priority"/>
                     <filter string="Speciment Collection Date/Time" name="specimen_collect_date"/>
                     <filter string="Speciment Collection End Time" name="specimen_collect_end_time"/>
@@ -173,7 +179,8 @@
                     <filter string="Producer Field 1" name="producer_field1"/>
                     <filter string="Producer Field 2" name="producer_field2"/>
                     <filter string="Microbiology Organism" name="microbiology_organism"/>
-                    <filter string="Name of Coding System" name="coding_system"/>
+                    <filter string="Name of Coding System" name="coding_system1"/>
+                    <filter string="Name of Coding System" name="coding_system2"/>
                     <filter string="Date/Time of Observations Reported" name="report_date"/>
                     <filter string="Producer's Charge" name="producer_charge"/>                        
                     <filter string="Producer's Section ID" name="producer_sectionid"/>                        
@@ -198,6 +205,7 @@
                         <filter string="Internal Accession ID" name="group_internal_accessionid" context="{'group_by': 'internal_accessionid'}"/>
                         <filter string="Internal Application Institution ID" name="group_internal_appid" context="{'group_by': 'internal_appid'}"/>
                         <filter string="Observation Battery Identifier" name="group_battery_identifier" context="{'group_by': 'battery_identifier'}"/>
+                        <filter string="Observation Battery Text" name="group_battery_text" context="{'group_by': 'battery_text'}"/>
                         <filter string="Priority" name="group_priority" context="{'group_by': 'priority'}"/>
                         <filter string="Speciment Collection Date/Time" name="group_specimen_collect_date" context="{'group_by': 'specimen_collect_date'}"/>
                         <filter string="Speciment Collection End Time" name="group_specimen_collect_end_time" context="{'group_by': 'specimen_collect_end_time'}"/>
@@ -218,7 +226,8 @@
                         <filter string="Producer Field 1" name="group_producer_field1" context="{'group_by': 'producer_field1'}"/>
                         <filter string="Producer Field 2" name="group_producer_field2" context="{'group_by': 'producer_field2'}"/>
                         <filter string="Microbiology Organism" name="group_microbiology_organism" context="{'group_by': 'microbiology_organism'}"/>
-                        <filter string="Name of Coding System" name="group_coding_system" context="{'group_by': 'coding_system'}"/>
+                        <filter string="Name of Coding System" name="group_coding_system1" context="{'group_by': 'coding_system1'}"/>
+                        <filter string="Name of Coding System" name="group_coding_system2" context="{'group_by': 'coding_system2'}"/>
                         <filter string="Date/Time of Observations Reported" name="group_report_date" context="{'group_by': 'report_date'}"/>
                         <filter string="Producer's Charge" name="group_producer_charge" context="{'group_by': 'producer_charge'}"/>                        
                         <filter string="Producer's Section ID" name="group_producer_sectionid" context="{'group_by': 'producer_sectionid'}"/>                        

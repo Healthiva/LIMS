@@ -21,10 +21,12 @@
     'website': "http://www.odoo.com",
     'category': 'Custom Development',
     'version': '1.0',
-    'depends': ['contacts'],
+    'depends': ['contacts', 'base_edi'],
     'data': [
+        'security/security_groups.xml',
         'security/ir.model.access.csv',
         'views/blood_lead_views.xml',
+        'views/res_config_settings.xml',
         'views/common_order_views.xml',
         'views/courtesy_views.xml',
         'views/diagnosis_views.xml',
@@ -36,7 +38,8 @@
         'views/message_header_views.xml',
         'views/observation_views.xml',
         'views/provider_views.xml',
-        'views/res_partner_views.xml',
         'views/result_views.xml',
+        'views/res_partner_views.xml',
+        'data/edi_contact_data.xml',
     ]
 }

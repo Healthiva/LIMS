@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from . import res_config_settings
 from . import res_partner
 from . import provider
 from . import courtesy
@@ -12,3 +13,4 @@ from . import common_order
 from . import observation
 from . import result
 from . import blood_lead
+from . import edi_config

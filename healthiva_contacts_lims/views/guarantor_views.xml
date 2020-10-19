@@ -15,7 +15,7 @@
         <record id="act_res_partner_2_guarantor" model="ir.actions.act_window">
             <field name="name">Guarantors</field>
             <field name="res_model">healthiva.guarantor</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,graph,pivot,dashboard</field>
             <field name="views">[("healthiva_contacts_lims.view_guarantor_tree","tree")]</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
@@ -30,36 +30,37 @@
             <field name="priority" eval="1"/>
             <field name="arch" type="xml">
                 <form string="Guarantors">
-                <sheet>
-                    <div class="oe_button_box" name="button_box"/>
-                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
-                    <div class="oe_title">
+                    <sheet>
                         <field name="active" invisible="1"/>
+                        <div class="oe_button_box" name="button_box"/>
+                        <group>
+                            <group>
+                                <field name="first_name"/>
+                                <field name="middle_name"/>
+                                <field name="last_name"/>
+                                <field name="spouse_name"/>
+                                <field name="dob"/>
+                                <field name="guarantor_type"/>
+                            </group>
+                            <group>
+                                <field name="patient_relation"/>
+                                <field name="ssn"/>
+                                <field name="begin_date"/>
+                                <field name="end_date"/>
+                                <field name="priority"/>
+                                <field name="employer_name"/>    
+                            </group>
+                        </group>
+                        <notebook colspan="4">
+                            <page name='internal_notes' string="Internal Notes">
+                                <field name="comment" placeholder="Internal note..."/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
                     </div>
-                    <group>
-                        <group>
-                            <field name="first_name"/>
-                            <field name="middle_name"/>
-                            <field name="last_name"/>
-                            <field name="spouse_name"/>
-                            <field name="dob"/>
-                            <field name="guarantor_type"/>
-                        </group>
-                        <group>
-                            <field name="patient_relation"/>
-                            <field name="ssn"/>
-                            <field name="begin_date"/>
-                            <field name="end_date"/>
-                            <field name="priority"/>
-                            <field name="employer_name"/>    
-                        </group>
-                    </group>
-                    <notebook colspan="4">
-                        <page name='internal_notes' string="Internal Notes">
-                            <field name="comment" placeholder="Internal note..."/>
-                        </page>
-                    </notebook>
-                </sheet>
                 </form>
             </field>
         </record>

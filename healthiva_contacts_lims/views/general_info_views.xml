@@ -8,14 +8,14 @@
                 <tree string="General Infos" multi_edit="1">
                     <field name="email"/>
                     <field name="height"/>
-                    <field name="weight"/>
+                    <field name="weight_lb"/>
                 </tree>
             </field>
         </record>
         <record id="act_res_partner_2_general_info" model="ir.actions.act_window">
             <field name="name">General Infos</field>
             <field name="res_model">healthiva.general_info</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,graph,pivot,dashboard</field>
             <field name="views">[("healthiva_contacts_lims.view_general_info_tree","tree")]</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
@@ -29,34 +29,37 @@
             <field name="priority" eval="1"/>
             <field name="arch" type="xml">
                 <form string="General Infos">
-                <sheet>
-                    <div class="oe_button_box" name="button_box"/>
-                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
-                    <div class="oe_title">
+                    <sheet>
                         <field name="active" invisible="1"/>
+                        <div class="oe_button_box" name="button_box"/>
+                        <group>
+                            <group>
+                                <field name="height"/>
+                                <field name="weight_lb"/>
+                                <field name="weight_oz"/>
+                                <field name="weight_uom"/>
+                                <field name="collection_volume"/>
+                                <field name="collection_uom"/>
+                            </group>
+                            <group>
+                                <field name="fasting"/>
+                                <field name="waist"/>
+                                <field name="bp_systolic"/>
+                                <field name="bp_diastolic"/>
+                                <field name="pulse"/>
+                                <field name="email"/>
+                            </group>
+                        </group>
+                        <notebook colspan="4">
+                            <page name='internal_notes' string="Internal Notes">
+                                <field name="comment" placeholder="Internal note..."/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
                     </div>
-                    <group>
-                        <group>
-                            <field name="height"/>
-                            <field name="weight"/>
-                            <field name="weight_uom"/>
-                            <field name="collection_volume"/>
-                            <field name="collection_uom"/>
-                        </group>
-                        <group>
-                            <field name="waist"/>
-                            <field name="bp_systolic"/>
-                            <field name="bp_diastolic"/>
-                            <field name="pulse"/>
-                            <field name="email"/>
-                        </group>
-                    </group>
-                    <notebook colspan="4">
-                        <page name='internal_notes' string="Internal Notes">
-                            <field name="comment" placeholder="Internal note..."/>
-                        </page>
-                    </notebook>
-                </sheet>
                 </form>
             </field>
         </record>
@@ -67,7 +70,8 @@
             <field name="arch" type="xml">
                 <search string="Search Partner">
                     <field name="height"/>
-                    <field name="weight"/>
+                    <field name="weight_lb"/>
+                    <field name="weight_oz"/>
                     <field name="weight_uom"/>
                     <field name="collection_volume"/>
                     <field name="collection_uom"/>
@@ -78,10 +82,12 @@
                     <field name="email"/>  
                     <separator/>
                     <filter string="Height" name="height"/>
-                    <filter string="Weight" name="weight"/>
+                    <filter string="Weight (pounds)" name="weight_lb"/>
+                    <filter string="Weight (ounces)" name="weight_oz"/>
                     <filter string="Weight Unit of Measure" name="weight_uom"/>
                     <filter string="Collection Volume Quantity" name="collection_volume"/>
                     <filter string="Collection Volume Unit of Measure" name="collection_uom"/>
+                    <filter string="Fasting" name="fasting"/>
                     <filter string="Waist Measurement" name="waist"/>
                     <filter string="Blood Pressure Systolic" name="bp_systolic"/>
                     <filter string="Blood Pressure Diastolic" name="bp_diastolic"/>
@@ -92,10 +98,12 @@
                     <separator/>
                     <group expand="0" name="group_by" string="Group By">
                         <filter string="Height" name="group_height" context="{'group_by': 'height'}"/> 
-                        <filter string="Weight" name="group_weight" context="{'group_by': 'weight'}"/> 
+                        <filter string="Weight (pounds)" name="group_weight_lb" context="{'group_by': 'weight_lb'}"/> 
+                        <filter string="Weight (ounces)" name="group_weight_oz" context="{'group_by': 'weight_oz'}"/> 
                         <filter string="Weight Unit of Measure" name="group_weight_uom" context="{'group_by': 'weight_uom'}"/> 
                         <filter string="Collection Volume Quantity" name="group_collection_volume" context="{'group_by': 'collection_volume'}"/> 
                         <filter string="Collection Volume Unit of Measure" name="group_collection_uom" context="{'group_by': 'collection_uom'}"/> 
+                        <filter string="Fasting" name="group_fasting" context="{'group_by': 'fasting'}"/> 
                         <filter string="Waist Measurement" name="group_waist" context="{'group_by': 'waist'}"/> 
                         <filter string="Blood Pressure Systolic" name="group_bp_systolic" context="{'group_by': 'bp_systolic'}"/> 
                         <filter string="Blood Pressure Diastolic" name="group_bp_diastolic" context="{'group_by': 'bp_diastolic'}"/> 
