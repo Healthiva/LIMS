@@ -1,0 +1,27 @@
+<odoo>
+    <data>
+        <record model="ir.module.category" id="module_contacts">
+             <field name="name">H-Module</field>
+             <field name="description">User access level for H-module</field>
+             <field name="sequence">20</field>
+        </record>
+    
+        <record id="group_contact_readonly" model="res.groups">
+            <field name="name">H-Module Readonly</field>
+            <field name="category_id" ref="module_contacts"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+    
+        <record id="group_contact_officer" model="res.groups">
+            <field name="name">H-Module Officer</field>
+            <field name="category_id" ref="module_contacts"/>
+            <field name="implied_ids" eval="[(4, ref('group_contact_readonly'))]"/>
+        </record>
+
+        <record id="group_contact_admin" model="res.groups">
+            <field name="name">H-Module Administrator</field>
+            <field name="category_id" ref="module_contacts"/>
+            <field name="implied_ids" eval="[(4, ref('group_contact_officer'))]"/>
+        </record>
+    </data>
+</odoo>

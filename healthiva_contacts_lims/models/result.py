@@ -4,15 +4,15 @@ from odoo import models, fields, api
 
 class Result(models.Model):
     _name = 'healthiva.result'
+    _inherit = ['mail.thread']
+    _description = "Result (OBX)"
 
-    active=fields.Boolean(default=True)
-    sequence_number=fields.Integer(string="Sequence Number")
+    active = fields.Boolean(default=True, groups="healthiva_contacts_lims.group_contact_admin")
+    sequence_number=fields.Char(string="Sequence Number")
     value_type=fields.Char(string="Value Type")
     observation_identifier=fields.Char(string="Observation Identifier")
     observation_text=fields.Text(string="Observation Text")
-    observation_date=fields.Datetime(string="Date/Time of Obeservation")
     coding_system_name1=fields.Char(string="Name of the Coding System 1")
-    coding_system_name2=fields.Char(string="Name of the Coding System 2")
     alternate_identifier=fields.Char(string="Alternate Identifier")
     alternate_observation_text=fields.Text(string="Alternate Obeservation Text")
     alternate_observation_system=fields.Char(string="Name of Alternate Obeservation System")
@@ -25,18 +25,20 @@ class Result(models.Model):
     coding_system=fields.Char(string="Coding System")
     identifier=fields.Char(string="Identifier")
     result_text=fields.Text(string="Text")
+    coding_system_name2=fields.Char(string="Name of the Coding System 2")
     ref_ranges=fields.Char(string="Reference Ranges")
     abnormal_flags=fields.Char(string="Abnormal Flags")
     probability=fields.Char(string="Probability")
     abnormal_test_nature=fields.Char(string="Nature of Abnormal Test")
-    result_status = fields.Selection(string="Observation Result Status", selection=[('preliminary', 'Preliminary Result'), ('cancelled', 'Procedure cannot be done'), ('corrected', 'Corrected Result'), ('complete', 'Result Complete'), ('incomplete', 'Incomplete')])
-    ref_range_update_date=fields.Date(string="Date of last change in reference range or units")
+    result_status = fields.Selection(string="Observation Result Status", selection=[('P', 'Preliminary Result'), ('X', 'Procedure cannot be done'), ('C', 'Corrected Result'), ('F', 'Result Complete'), ('I', 'Incomplete')])
+    ref_range_update_date=fields.Char(string="Date of last change in reference range or units")
     access_checks=fields.Char(string="User Defined Access Checks")
+    observation_date=fields.Char(string="Date/Time of Obeservation")
     producerid=fields.Char(string="Producer ID")
     observer=fields.Char(string="Responsible Observer")
     observation_method=fields.Char(string="Observation Method")
     equipment_identifier=fields.Char(string="Equipment Instance Identifier")
-    analysis_date=fields.Datetime(string="Date/Time of the analysis")
+    analysis_date=fields.Char(string="Date/Time of the analysis")
     reserver_hamorizing1=fields.Char(string="Reserver for Hamorizing")
     reserver_hamorizing2=fields.Char(string="Reserver for Hamorizing")
     reserver_hamorizing3=fields.Char(string="Reserver for Hamorizing")
@@ -48,3 +50,15 @@ class Result(models.Model):
     local_process_control=fields.Char(string="Local Process Control")
     patient_id = fields.Many2one("res.partner", string="Related Patient")
     comment=fields.Text(string="Notes")
+    status=fields.Selection(string="Status", selection=[('pos', 'Positive'), ('neg', 'Negative')])
+
+    def write(self, vals):
+        initial_rec = self.read()[0]
+        rslt = super(Result, self.sudo()).write(vals)
+        final_rec = self.read()[0]
+        body = "{} Updated the following fields:<br/>".format(final_rec['write_date'].strftime("%d/%m/%y %H:%M"))
+        for key in initial_rec:
+            if initial_rec[key] != final_rec[key] and key != 'write_date':
+                body += "{} changed from {} to {}<br/>".format(self._fields[key].string, initial_rec[key], final_rec[key])
+        self.message_post(body=body, author_id=self.env.user.partner_id.id)
+        return rslt

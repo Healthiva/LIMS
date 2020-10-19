@@ -5,6 +5,11 @@
       <field name="model">res.partner</field>
       <field name="inherit_id" ref="base.view_partner_form"/>
       <field name="arch" type="xml">
+        <xpath expr="//div[@class='alert alert-warning oe_edit_only']" position="before"> 
+          <header>
+            <button name="action_send_emr" string="Send EMR" class="oe_highlight" type="object" groups="healthiva_contacts_lims.group_contact_admin"/>
+          </header>
+        </xpath>
         <xpath expr="//sheet/div[@class='oe_title']/field[@name='company_type']" position="replace">
           <field name="company_type" widget="radio" class="oe_edit_only" invisible="1" options="{'horizontal': true}"/>
         </xpath>
@@ -52,12 +57,12 @@
             </button>
           </div>
         </xpath>
-        <xpath expr="//sheet/div/h1/field[@name='name']" position="after">
+        <!-- <xpath expr="//sheet/div/h1/field[@name='name']" position="after">
+        </xpath> -->
+        <xpath expr="//sheet/group/group/field[@name='vat']" position="after">
           <field name="first_name"/>
           <field name="middle_name"/>
           <field name="last_name"/>
-        </xpath>
-        <xpath expr="//sheet/group/group/field[@name='vat']" position="after">
           <field name="external_pid"/>
           <field name="assigned_pid"/>
           <field name="alternate_pid"/>
@@ -66,30 +71,56 @@
           <field name="age_months"/>
           <field name="age_days"/>
           <field name="gender"/>
+          <field name="alias"/>
           <field name="race"/>
-          <field name="language"/>
+          <field name="country_code"/>
           <field name="tele_use_code"/>
           <field name="tele_equip_type"/>
           <field name="tele_address"/>
+          <field name="work_phone"/>
+          <field name="language"/>
+          <field name="marital_status"/>
         </xpath>
         <xpath expr="//sheet/group/group/field[@name='category_id']" position="after">
-          <field name="alias"/>
-          <field name="marital_status"/>
           <field name="religion"/>
           <field name="is_fasting"/>
           <field name="ethnic_group"/>
           <field name="driver_license"/>
           <field name="ssn"/>
           <field name="account_number"/>
+          <field name="check_digit"/>
+          <field name="check_digit_scheme"/>
           <field name="bill_type"/>
           <field name="abn_flag"/>
           <field name="specimen_status"/>
           <field name="mother_maiden"/>
           <field name="mother_identifier"/>
+          <field name="patient_address1"/>
+          <field name="patient_address2"/>
+          <field name="patient_address_city"/>
+          <field name="patient_address_state"/>
+          <field name="patient_address_zip"/>
         </xpath>
         <xpath expr="//sheet/notebook/page[1]" position="before">
           <page name='msh_page' string="MSH">
-            <field name="message_header_ids" context="{'form_view_ref':'healthiva_contacts_lims.view_message_header_form'}"/>
+            <group>
+                <group>
+                    <field name="field_delimiter"/>
+                    <field name="sending_application"/>
+                    <field name="sending_facility"/>
+                    <field name="receiving_application"/>
+                    <field name="receiving_facility"/>                 
+                    <field name="receive_date"/>                 
+                </group>
+                <group>
+                    <field name="component_delimiter"/>
+                    <field name="security"/>
+                    <field name="message_type"/>
+                    <field name="message_controlid"/>
+                    <field name="processingid"/>
+                    <field name="hl7_version"/>        
+                </group>
+            </group>
           </page>
         </xpath>
       </field>
@@ -101,9 +132,9 @@
       <field name="inherit_id" ref="base.view_res_partner_filter"/>
       <field name="arch" type="xml">
         <xpath expr="//search/field[@name='user_id']" position="after">
+          <field name="last_name"/>
           <field name="first_name"/>
           <field name="middle_name"/>
-          <field name="last_name"/>
           <field name="external_pid"/>
           <field name="assigned_pid"/>
           <field name="alternate_pid"/>
@@ -112,12 +143,14 @@
           <field name="age_months"/>
           <field name="age_days"/>
           <field name="gender"/>
+          <field name="alias"/>
           <field name="race"/>
           <field name="language"/>
+          <field name="country_code"/>
           <field name="tele_use_code"/>
           <field name="tele_equip_type"/>
           <field name="tele_address"/>
-          <field name="alias"/>
+          <field name="work_phone"/>
           <field name="marital_status"/>
           <field name="religion"/>
           <field name="is_fasting"/>
@@ -125,11 +158,18 @@
           <field name="driver_license"/>
           <field name="ssn"/>
           <field name="account_number"/>
+          <field name="check_digit"/>
+          <field name="check_digit_scheme"/>
           <field name="bill_type"/>
           <field name="abn_flag"/>
           <field name="specimen_status"/>
           <field name="mother_maiden"/>
           <field name="mother_identifier"/>
+          <field name="patient_address1"/>
+          <field name="patient_address2"/>
+          <field name="patient_address_city"/>
+          <field name="patient_address_state"/>
+          <field name="patient_address_zip"/>
         </xpath>
         <xpath expr="//search/separator[1]" position="after">
           <filter string="First Name" name="first_name"/>
@@ -145,9 +185,11 @@
           <filter string="Gender" name="gender"/>
           <filter string="Race" name="race"/>
           <filter string="Language" name="language"/>
+          <filter string="Country Code" name="country_code"/>
           <filter string="Telecommunication Use Code" name="tele_use_code"/>
           <filter string="Telecommunication Equipment Type" name="tele_equip_type"/>
           <filter string="Telecommunication Address" name="tele_address"/>
+          <filter string="Work Phone" name="work_phone"/>
           <filter string="Alias" name="alias"/>
           <filter string="Marital Status" name="marital_status"/>
           <filter string="Religion" name="religion"/>
@@ -156,11 +198,18 @@
           <filter string="Driver's License" name="driver_license"/>
           <filter string="Social Security Number" name="ssn"/>
           <filter string="Account Number" name="account_number"/>
+          <filter string="Check Digit" name="check_digit"/>
+          <filter string="Check Digit Scheme" name="check_digit_scheme"/>
           <filter string="Bill Type" name="bill_type"/>
           <filter string="ABN Flag" name="abn_flag"/>
           <filter string="Status of Specimen" name="specimen_status"/>
           <filter string="Mother's Maiden Name" name="mother_maiden"/>
           <filter string="Mother's Identifier" name="mother_identifier"/>
+          <filter string="Patient Address Line 1" name="patient_address1"/>
+          <filter string="Patient Address Line 2" name="patient_address2"/>
+          <filter string="Patient Address City" name="patient_address_city"/>
+          <filter string="Patient Address State" name="patient_address_state"/>
+          <filter string="Patient Address zip" name="patient_address_zip"/>
         </xpath>
         <xpath expr="//search/group[@name='group_by']/filter[@name='group_country']" position="after">
           <filter string="First Name" name="group_first_name" context="{'group_by': 'first_name'}"/>
@@ -179,6 +228,8 @@
           <filter string="Telecommunication Use Code" name="group_tele_use_code" context="{'group_by': 'tele_use_code'}"/>
           <filter string="Telecommunication Equipment Type" name="group_tele_equip_type" context="{'group_by': 'tele_equip_type'}"/>
           <filter string="Telecommunication Address" name="group_tele_address" context="{'group_by': 'tele_address'}"/>
+          <filter string="Country Code" name="group_country_code" context="{'group_by':'country_code'}"/>
+          <filter string="Work Phone" name="group_work_phone" context="{'group_by':'work_phone'}"/>
           <filter string="Alias" name="group_alias" context="{'group_by': 'alias'}"/>
           <filter string="Marital Status" name="group_marital_status" context="{'group_by': 'marital_status'}"/>
           <filter string="Religion" name="group_religion" context="{'group_by': 'religion'}"/>
@@ -187,11 +238,18 @@
           <filter string="Driver's License" name="group_driver_license" context="{'group_by': 'driver_license'}"/>
           <filter string="Social Security Number" name="group_ssn" context="{'group_by': 'ssn'}"/>
           <filter string="Account Number" name="group_account_number" context="{'group_by': 'account_number'}"/>
+          <filter string="Check Digit" name="group_check_digit" context="{'group_by':'check_digit'}"/>
+          <filter string="Check Digit Scheme" name="group_check_digit_scheme" context="{'group_by':'check_digit_scheme'}"/>
           <filter string="Bill Type" name="group_bill_type" context="{'group_by': 'bill_type'}"/>
           <filter string="ABN Flag" name="group_abn_flag" context="{'group_by': 'abn_flag'}"/>
           <filter string="Status of Specimen" name="group_specimen_status" context="{'group_by': 'specimen_status'}"/>
           <filter string="Mother's Maiden Name" name="group_mother_maiden" context="{'group_by': 'mother_maiden'}"/>
           <filter string="Mother's Identifier" name="group_mother_identifier" context="{'group_by': 'mother_identifier'}"/>
+          <filter string="Patient Address Line 1" name="group_patient_address1" context="{'group_by':'patient_address1'}"/>
+          <filter string="Patient Address Line 2" name="group_patient_address2" context="{'group_by':'patient_address2'}"/>
+          <filter string="Patient Address City" name="group_patient_address_city" context="{'group_by':'patient_address_city'}"/>
+          <filter string="Patient Address State" name="group_patient_address_state" context="{'group_by':'patient_address_state'}"/>
+          <filter string="Patient Address zip" name="group_patient_address_zip" context="{'group_by':'patient_address_zip'}"/>
         </xpath>
       </field>
     </record>
@@ -256,5 +314,60 @@
         parent="menu_related_info"
         action="healthiva_contacts_lims.act_res_partner_2_result"
         sequence="13"/>
+
+    <!-- <menuitem id="menu_patient_reports"
+        name="Reporting"
+        parent="contacts.menu_contacts"
+        sequence="2"/>
+
+    <menuitem id="blood_lead_reports"
+        parent="menu_patient_reports"
+        action="healthiva_contacts_lims.act_res_partner_2_blood_lead_dashboard"
+        sequence="4"/>
+
+    <menuitem id="common_order_reports"
+        parent="menu_patient_reports"
+        action="healthiva_contacts_lims.act_res_partner_2_common_order_dashboard"
+        sequence="5"/>
+
+    <menuitem id="courtesy_reports"
+        parent="menu_patient_reports"
+        action="healthiva_contacts_lims.act_res_partner_2_courtesy_dashboard"
+        sequence="6"/>
+
+    <menuitem id="diagnosis_reports"
+        parent="menu_patient_reports"
+        action="healthiva_contacts_lims.act_res_partner_2_diagnosis_dashboard"
+        sequence="7"/>
+
+    <menuitem id="general_info_reports"
+        parent="menu_patient_reports"
+        action="healthiva_contacts_lims.act_res_partner_2_general_info_dashboard"
+        sequence="8"/>
+
+    <menuitem id="guarantor_reports"
+        parent="menu_patient_reports"
+        action="healthiva_contacts_lims.act_res_partner_2_guarantor_dashboard"
+        sequence="9"/>
+
+    <menuitem id="insurance_reports"
+        parent="menu_patient_reports"
+        action="healthiva_contacts_lims.act_res_partner_2_insurance_dashboard"
+        sequence="10"/>
+
+    <menuitem id="observation_reports"
+        parent="menu_patient_reports"
+        action="healthiva_contacts_lims.act_res_partner_2_observation_dashboard"
+        sequence="11"/>
+
+    <menuitem id="provider_reports"
+        parent="menu_patient_reports"
+        action="healthiva_contacts_lims.act_res_partner_2_provider_dashboard"
+        sequence="12"/>
+
+    <menuitem id="result_reports"
+        parent="menu_patient_reports"
+        action="healthiva_contacts_lims.act_res_partner_2_result_dashboard"
+        sequence="13"/> -->
   </data>
 </odoo>
