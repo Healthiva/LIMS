@@ -1,0 +1,60 @@
+<odoo>
+    <data>
+        <record id="view_compound_test_tree" model="ir.ui.view">
+            <field name="name">healthiva.compound_test.tree</field>
+            <field name="model">healthiva.compound_test</field>
+            <field name="priority">2</field>
+            <field name="arch" type="xml">
+                <tree string="Compound Tests" multi_edit="1">
+                    <field name="name"/>
+                    <field name="drug_group_id"/>
+                    <field name="specimen_type_id"/>
+                </tree>
+            </field>
+        </record>
+        <record id="act_res_partner_2_compound_test" model="ir.actions.act_window">
+            <field name="name">Compound Tests</field>
+            <field name="res_model">healthiva.compound_test</field>
+            <field name="view_mode">tree,form</field>
+            <field name="views">[("healthiva_contacts_lims.view_compound_test_tree","tree")]</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Record a new compound test
+                </p>
+            </field>
+        </record>
+        <record id="view_compound_test_form" model="ir.ui.view">
+            <field name="name">healthiva.compound_test.form</field>
+            <field name="model">healthiva.compound_test</field>
+            <field name="priority" eval="1"/>
+            <field name="arch" type="xml">
+                <form string="Compound Test">
+                    <sheet>
+                        <field name="active" invisible="1"/>
+                        <div class="oe_button_box" name="button_box"/>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="drug_group_id" required="1"/>
+                                <field name="specimen_type_id"/>
+                                <field name="upper_limit"/>
+                                <field name="detection"/>
+                                <field name="process_location_id"/>
+                            </group>
+                            <group>
+                                <field name="cutoff"/>
+                                <field name="uom_id"/>
+                                <field name="minimum_range"/>
+                                <field name="maximum_range"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

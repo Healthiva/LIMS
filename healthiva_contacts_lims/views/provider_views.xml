@@ -15,7 +15,7 @@
         <record id="act_res_partner_2_provider" model="ir.actions.act_window">
             <field name="name">Providers</field>
             <field name="res_model">healthiva.provider</field>
-            <field name="view_mode">tree,form,graph,pivot,dashboard</field>
+            <field name="view_mode">tree,form,graph,pivot</field>
             <field name="views">[("healthiva_contacts_lims.view_provider_tree","tree")]</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">

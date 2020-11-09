@@ -9,26 +9,22 @@
             <field name="arch" type="xml">
                 <xpath expr="//div[@id='invite_users']" position="before">
                     <div id="analyte_setting">
-                        <h2>Analyte Configuration Settings</h2>
+                        <h2>H-Module Report Settings</h2>
                         <div class="row mt16 o_settings_container">
                             <div class="col-12 col-lg-6 o_setting_box">
                                 <div class="o_setting_right_pane">
-                                    <span class="o_form_label">Range</span>
+                                    <span class="o_form_label">Variables</span>
                                     <div class="text-muted">
-                                        The minimum and maximum range for a test to be determined as NEGATIVE or POSITIVE
+                                        The Lab Director and CLIA ID used in observation reports
                                     </div>
                                     <div class="content-group">
                                         <div class="mt16 row">
-                                            <label for="minimum" string="Minimum Range" class="col-3 col-lg-3 o_light_label"/>
-                                            <field name="minimum" class="oe_inline"/>
+                                            <label for="lab_director" string="Lab Director" class="col-3 col-lg-3 o_light_label"/>
+                                            <field name="lab_director" class="oe_inline"/>
                                         </div>
                                         <div class="mt16 row">
-                                            <label for="maximum" string="Maximum Range" class="col-3 col-lg-3 o_light_label"/>
-                                            <field name="maximum" class="oe_inline"/>
-                                        </div>
-                                        <div class="mt16 row">
-                                            <label for="test_enable" string="Enable Test?" class="col-3 col-lg-3 o_light_label"/>
-                                            <field name="test_enable" class="oe_inline"/>
+                                            <label for="cliaid" string="CLIA ID" class="col-3 col-lg-3 o_light_label"/>
+                                            <field name="cliaid" class="oe_inline"/>
                                         </div>
                                     </div>
                                 </div>

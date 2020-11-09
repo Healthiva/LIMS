@@ -78,6 +78,7 @@ class SyncDocumentType(models.Model):
             for edifile in files:
                 patient = None
                 message = None
+                observation = None
                 with open(edifile, 'rt') as f:
                     lines = f.read().splitlines()
                     for line in lines:
@@ -85,7 +86,7 @@ class SyncDocumentType(models.Model):
                         if fields[0] == "MSH":
                             message = self.create_msh(fields)
                         elif fields[0] == "PID":
-                            patient = self.create_patient(fields, message)
+                            patient = self.identify_patient(fields, message)
                         elif fields[0] == "PV1":
                             self.create_provider(fields, patient)
                         elif fields[0] == "IN1":
@@ -99,9 +100,9 @@ class SyncDocumentType(models.Model):
                         elif fields[0] == "ORC":
                             self.create_common_order(fields, patient)
                         elif fields[0] == "OBR":
-                            self.create_observation(fields, patient)
+                            observation = self.identify_patient(fields, patient)
                         elif fields[0] == "OBX":
-                            self.create_result(fields, patient)
+                            self.create_result(fields, observation)
                     f.close()
         conn._disconnect()
         return True
@@ -151,25 +152,8 @@ class SyncDocumentType(models.Model):
             pass
         return
 
-    def create_msh(self, fields):
-        # Creates record using fill_fields helper method
-        return self.env['healthiva.message_header'].create([{
-            "field_delimiter": "|",
-            "component_delimiter": self.fill_fields(fields, 1),
-            "sending_application": self.fill_fields(fields, 2),
-            "sending_facility": self.fill_fields(fields, 3),
-            "receiving_application": self.fill_fields(fields, 4),
-            "receiving_facility": self.fill_fields(fields, 5),
-            "receive_date": self.fill_fields(fields, 6),
-            "security": self.fill_fields(fields, 7),
-            "message_type": self.fill_fields(fields, 8),
-            "message_controlid": self.fill_fields(fields, 9),
-            "processingid": self.fill_fields(fields, 10),
-            "hl7_version": self.fill_fields(fields, 11)
-        }])
-
-    def create_patient(self, fields, message):
-        return self.env['res.partner'].create([{
+    def identify_patient(self, fields, message):
+        vals = {
             "sequence_number": self.strtoint(self.fill_fields(fields, 1)),
             "external_pid": self.fill_fields(fields, 2),
             "assigned_pid": self.fill_fields(fields, 3),
@@ -212,7 +196,91 @@ class SyncDocumentType(models.Model):
             "mother_identifier": self.fill_fields(fields, 21),
             "ethnic_group": self.fill_fields(fields, 22),
             "message_header_id": message.id
+        }
+        patient = self.env['res.partner']
+        record = patient.search([('external_pid', '=', vals['external_pid'])])
+        if record:
+            record = patient.write(1, record.id, vals)
+        else:
+            record = patient.write(0, 0, vals)
+        return record
+
+    def identify_observation(self, fields, patient):
+        vals = {
+            "sequence_number": self.strtoint(self.fill_fields(fields, 1)),
+            "foreign_accessionid": self.fill_fields(fields, 2, 0),
+            "foreign_appid": self.fill_fields(fields, 2, 1),
+            "internal_accessionid": self.fill_fields(fields, 3, 0),
+            "internal_appid": self.fill_fields(fields, 3, 1),
+            "battery_identifier": self.fill_fields(fields, 4, 0),
+            "battery_text": self.fill_fields(fields, 4, 1),
+            "coding_system1": self.fill_fields(fields, 4, 2),
+            "priority": self.fill_fields(fields, 5),
+            # "": fields[6],
+            "specimen_collect_date": self.fill_fields(fields, 7),
+            "specimen_collect_end_time": self.fill_fields(fields, 8),
+            "collection_volume": self.strtoint(self.fill_fields(fields, 9, 0)),
+            "collection_uom": self.fill_fields(fields, 9, 1),
+            "collector_identifier": self.fill_fields(fields, 10),
+            "action_code": self.fill_fields(fields, 11),
+            "danger_code": self.fill_fields(fields, 12),
+            "clinic_info": self.fill_fields(fields, 13, 0),
+            "clinic_info_back": self.fill_fields(fields, 13, 1),
+            "specimen_receipt_date": self.fill_fields(fields, 14),
+            "specimen_source": self.fill_fields(fields, 15),
+            "providerid": self.strtoint(self.fill_fields(fields, 16, 0)),
+            "provider_last": self.fill_fields(fields, 16, 1),
+            "provider_first": self.fill_fields(fields, 16, 2),
+            "provider_middle": self.fill_fields(fields, 16, 3),
+            "provider_suffix": self.fill_fields(fields, 16, 4),
+            "provider_prefix": self.fill_fields(fields, 16, 5),
+            "provider_degree": self.fill_fields(fields, 16, 6),
+            "source_table": self.fill_fields(fields, 16, 7),
+            "phone": self.fill_fields(fields, 17),
+            "alternate_foreign_accessionid": self.fill_fields(fields, 18),
+            "requester_field2": self.fill_fields(fields, 19),
+            "producer_field1": self.fill_fields(fields, 20, 0),
+            "microbiology_organism": self.fill_fields(fields, 20, 1),
+            "coding_system2": self.fill_fields(fields, 20, 2),
+            "producer_field2": self.fill_fields(fields, 21),
+            "report_date": self.fill_fields(fields, 22),
+            "producer_charge": self.fill_fields(fields, 23),
+            "producer_sectionid": self.fill_fields(fields, 24),
+            "order_result_status": self.fill_fields(fields, 25),
+            "organism_link": self.fill_fields(fields, 26, 0),
+            "subid": self.fill_fields(fields, 26, 1),
+            "quantity_timing": self.strtoint(self.fill_fields(fields, 27)),
+            "courtesy_copies": self.strtoint(self.fill_fields(fields, 28)),
+            "parent_order_link": self.fill_fields(fields, 29),
+            "patient_id": self.get_id(patient)
+        }
+        observation = self.env['healthiva.observation']
+        record = observation.search([('foreign_accessionid', '=', vals['foreign_accessionid'])])
+        if record:
+            record = observation.write(1, record.id, vals)
+        else:
+            record = observation.write(0, 0, vals)
+        return record
+
+    def create_msh(self, fields):
+        # Creates record using fill_fields helper method
+        return self.env['healthiva.message_header'].create([{
+            "field_delimiter": "|",
+            "component_delimiter": self.fill_fields(fields, 1),
+            "sending_application": self.fill_fields(fields, 2),
+            "sending_facility": self.fill_fields(fields, 3),
+            "receiving_application": self.fill_fields(fields, 4),
+            "receiving_facility": self.fill_fields(fields, 5),
+            "receive_date": self.fill_fields(fields, 6),
+            "security": self.fill_fields(fields, 7),
+            "message_type": self.fill_fields(fields, 8),
+            "message_controlid": self.fill_fields(fields, 9),
+            "processingid": self.fill_fields(fields, 10),
+            "hl7_version": self.fill_fields(fields, 11)
         }])
+
+    def create_patient(self, fields, message):
+        return self.env['res.partner'].create([])
 
     def create_provider(self, fields, patient):
         self.env['healthiva.provider'].create([{
@@ -408,64 +476,9 @@ class SyncDocumentType(models.Model):
         }])
 
     def create_observation(self, fields, patient):
-        self.env['healthiva.observation'].create([{
-            "sequence_number": self.strtoint(self.fill_fields(fields, 1)),
-            "foreign_accessionid": self.fill_fields(fields, 2, 0),
-            "foreign_appid": self.fill_fields(fields, 2, 1),
-            "internal_accessionid": self.fill_fields(fields, 3, 0),
-            "internal_appid": self.fill_fields(fields, 3, 1),
-            "battery_identifier": self.fill_fields(fields, 4, 0),
-            "battery_text": self.fill_fields(fields, 4, 1),
-            "coding_system1": self.fill_fields(fields, 4, 2),
-            "priority": self.fill_fields(fields, 5),
-            # "": fields[6],
-            "specimen_collect_date": self.fill_fields(fields, 7),
-            "specimen_collect_end_time": self.fill_fields(fields, 8),
-            "collection_volume": self.strtoint(self.fill_fields(fields, 9, 0)),
-            "collection_uom": self.fill_fields(fields, 9, 1),
-            "collector_identifier": self.fill_fields(fields, 10),
-            "action_code": self.fill_fields(fields, 11),
-            "danger_code": self.fill_fields(fields, 12),
-            "clinic_info": self.fill_fields(fields, 13, 0),
-            "clinic_info_back": self.fill_fields(fields, 13, 1),
-            "specimen_receipt_date": self.fill_fields(fields, 14),
-            "specimen_source": self.fill_fields(fields, 15),
-            "providerid": self.strtoint(self.fill_fields(fields, 16, 0)),
-            "provider_last": self.fill_fields(fields, 16, 1),
-            "provider_first": self.fill_fields(fields, 16, 2),
-            "provider_middle": self.fill_fields(fields, 16, 3),
-            "provider_suffix": self.fill_fields(fields, 16, 4),
-            "provider_prefix": self.fill_fields(fields, 16, 5),
-            "provider_degree": self.fill_fields(fields, 16, 6),
-            "source_table": self.fill_fields(fields, 16, 7),
-            "phone": self.fill_fields(fields, 17),
-            "alternate_foreign_accessionid": self.fill_fields(fields, 18),
-            "requester_field2": self.fill_fields(fields, 19),
-            "producer_field1": self.fill_fields(fields, 20, 0),
-            "microbiology_organism": self.fill_fields(fields, 20, 1),
-            "coding_system2": self.fill_fields(fields, 20, 2),
-            "producer_field2": self.fill_fields(fields, 21),
-            "report_date": self.fill_fields(fields, 22),
-            "producer_charge": self.fill_fields(fields, 23),
-            "producer_sectionid": self.fill_fields(fields, 24),
-            "order_result_status": self.fill_fields(fields, 25),
-            "organism_link": self.fill_fields(fields, 26, 0),
-            "subid": self.fill_fields(fields, 26, 1),
-            "quantity_timing": self.strtoint(self.fill_fields(fields, 27)),
-            "courtesy_copies": self.strtoint(self.fill_fields(fields, 28)),
-            "parent_order_link": self.fill_fields(fields, 29),
-            "patient_id": self.get_id(patient)
-        }])
+        self.env['healthiva.observation'].create([])
 
     def create_result(self, fields, patient):
-        status = ""
-        if self.env['ir.config_parameter'].sudo().get_param('test_enable'):
-            minimum = self.env['ir.config_parameter'].sudo().get_param('minimum')
-            maximum = self.env['ir.config_parameter'].sudo().get_param('maximum')
-            if minimum <= self.strtoint(self.fill_fields(fields, 5, 0)) and maximum >= self.strtoint(self.fill_fields(fields, 5, 0)):
-                status = "neg"
-            else:
-                status = "pos"
         self.env['healthiva.result'].create([{
             "sequence_number": self.strtoint(self.fill_fields(fields, 1)),
             "value_type": self.fill_fields(fields, 2),
@@ -477,8 +490,8 @@ class SyncDocumentType(models.Model):
             "alternate_observation_system": self.fill_fields(fields, 3, 5),
             "observation_subid": self.fill_fields(fields, 4),
             "observation_value": self.fill_fields(fields, 5, 0),
-            "date_type": self.fill_fields(fields, 5, 1),
-            "date_subtype": self.fill_fields(fields, 5, 2),
+            "data_type": self.fill_fields(fields, 5, 1),
+            "data_subtype": self.fill_fields(fields, 5, 2),
             "encoding": self.fill_fields(fields, 5, 3),
             "data_text": self.fill_fields(fields, 5, 4),
             "coding_system": self.fill_fields(fields, 5, 5),
@@ -508,7 +521,6 @@ class SyncDocumentType(models.Model):
             "route_cause": self.fill_fields(fields, 27),
             "local_process_control": self.fill_fields(fields, 28),
             "patient_id": self.get_id(patient),
-            "status": status
         }])
         
     def parse_msh(self, msh):
@@ -878,8 +890,8 @@ class SyncDocumentType(models.Model):
             "alternate_observation_system",
             "observation_subid",
             "observation_value",
-            "date_type",
-            "date_subtype",
+            "data_type",
+            "data_subtype",
             "encoding",
             "data_text",
             "coding_system",

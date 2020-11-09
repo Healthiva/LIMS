@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report 
+            id="action_report_patientresults"
+            string="Test Results"
+            model="healthiva.observation" 
+            report_type="qweb-pdf"
+            paperformat="healthiva_contacts_lims.paperformat_healthiva_observation"
+            file="healthiva_contacts_lims.report_patientresults" 
+            name="healthiva_contacts_lims.report_patientresults"
+            print_report_name="'Tox_%s_%s_%s' % (object.patient_id.last_name or '', object.patient_id.first_name or '', object.specimen_collect_date or '')"
+        />
+    </data>
+
+    <record id="paperformat_healthiva_observation" model="report.paperformat">
+        <field name="name">Observation Report</field>
+        <field name="default" eval="True"/>
+        <field name="format">A4</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">70</field>
+        <field name="margin_bottom">28</field>
+        <field name="margin_left">7</field>
+        <field name="margin_right">7</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">65</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <template id="report_assets_common" name="Healthiva Assets" inherit_id="web.report_assets_common">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" href="/healthiva_contacts_lims/static/src/css/healthiva_contacts_lims.scss"/>
+        </xpath>
+    </template>
+
+    <template id="healthiva_external_layout">
+        <t t-if="not company">
+            <!-- Multicompany -->
+            <t t-if="company_id">
+                <t t-set="company" t-value="company_id"/>
+            </t>
+            <t t-elif="o and 'company_id' in o">
+                <t t-set="company" t-value="o.company_id.sudo()"/>
+            </t>
+            <t t-else="else">
+                <t t-set="company" t-value="res_company"/>
+            </t>
+        </t>
+        <div t-attf-class="header o_company_#{company.id}_layout">
+            <div class="row">
+                <div class="col-3 mb4">
+                    <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" style="max-height: 90px;" alt="Logo"/>
+                </div>
+                <div class="col-6 text-right" style="margin-top:22px;" t-field="company.report_header" name="moto"/>
+
+                <div class="col-9 text-right" name="company_address">
+                    <div t-field="company.partner_id"
+                        t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'
+                    />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-5">
+                    <Strong>Accession #: </Strong>
+                    <span t-field="o.foreign_accessionid"/>
+                </div>
+                <div class="text-right col-4">
+                    <Strong>Lab Director: </Strong>
+                    <span t-esc="config.get_param('lab_director')"/>
+                </div>
+                <div class="text-right col-3">
+                    <Strong>CLIA ID: </Strong>
+                    <span t-esc="config.get_param('cliaid')"/>
+                </div>
+            </div>
+            
+            <t t-if="not o" t-set="o" t-value="doc"/>
+            <div class="header_info">
+                <div class="header_item">
+                    <strong>Patient Name: </strong>
+                    <span t-field="o.patient_id.last_name"/>,
+                    <span t-field="o.patient_id.first_name"/>
+                </div>
+                <div class="header_item">
+                    <strong>Physician: </strong>
+                    <span t-field="result_sample.performing_names"/>
+                </div>
+                <div class="header_item">
+                    <strong>Patient DOB: </strong>
+                    <span t-if="o.patient_id.birth_date and len(o.patient_id.birth_date)>=8" t-esc="'{}/{}/{}'.format(o.patient_id.birth_date[4:6],o.patient_id.birth_date[6:8],o.patient_id.birth_date[0:4])"/>
+                </div>
+                <div class="header_item">
+                    <strong>Collect Date: </strong> 
+                    <span t-if=" o.specimen_collect_date and len(o.specimen_collect_date)>=8" t-esc="'{}/{}/{}'.format(o.specimen_collect_date[4:6],o.specimen_collect_date[6:8],o.specimen_collect_date[0:4])"/>
+                </div>
+                <div class="header_item">
+                    <strong>Sample Type: </strong>
+                    <span t-field="o.specimen_type_id.name"/>
+                </div>
+                <div class="header_item">
+                    <strong>Received Date: </strong>
+                    <span t-if="result_sample.observation_date and len(result_sample.observation_date)>=8" t-esc="'{}/{}/{}'.format(result_sample.observation_date[4:6],result_sample.observation_date[6:8],result_sample.observation_date[0:4])"/>
+                </div>
+                <div class="header_item">
+                    <strong>Order No.: </strong>
+                    <span t-field="o.foreign_accessionid"/>
+                </div>
+                <div class="header_item">
+                    <strong>Reported Date: </strong>
+                    <span t-if="o.patient_id.receive_date and len(o.patient_id.receive_date)>=8" t-esc="'{}/{}/{}'.format(o.patient_id.receive_date[4:6],o.patient_id.receive_date[6:8],o.patient_id.receive_date[0:4])"/>
+                </div>
+            </div>
+        </div>
+
+        <div t-attf-class="article o_report_layout_standard o_company_#{company.id}_layout"  t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
+            <t t-call="web.address_layout"/>
+            <t t-raw="0"/>
+        </div>
+
+        <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout">
+            <div style="border-top: 2px solid black;">
+                <div class="text-left text-muted" >
+                    <span>Reviewed and Approved By: </span>
+                    <span t-esc="config.get_param('lab_director')"/>
+                </div>
+
+                <div t-if="report_type == 'pdf'" class="text-center text-muted">
+                    Page: <span class="page"/> / <span class="topage"/>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="report_patientresults">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="healthiva_contacts_lims.healthiva_external_layout">
+                    <div class="page">
+                        <div class="medication_header">
+                            <div class="medication">
+                                <strong>Prescribed Medications:<br/></strong>
+                                <t t-if="o.clinic_info">
+                                    <span t-field="o.clinic_info"/>
+                                </t>
+                                <t t-else="">
+                                    <span>No Medications</span>
+                                </t>
+                            </div>
+                        </div>
+                        <table>
+                            <thead>
+                                <tr class="top_table_row">
+                                    <th name="th_lcms" colspan="4" class="text-left">Screen Results (Presumptive Positive)</th>
+                                </tr>
+                                <tr class="second_table_row">
+                                    <th name="th_analyte">Analyte</th>
+                                    <th name="th_positive">Positive</th>
+                                    <th name="th_cutoff">Cutoff(ng/ml)</th>
+                                    <th name="th_comments">Comments</th>
+                                </tr>
+                            </thead>
+                        </table>
+                        <table>
+                            <thead>
+                                <tr class="top_table_row">
+                                    <th name="th_lcms" colspan="4" class="text-left">LCMS Results</th>
+                                </tr>
+                                <tr class="second_table_row">
+                                    <th name="th_analyte">Analyte</th>
+                                    <th name="th_positive">Positive</th>
+                                    <th name="th_cutoff">Cutoff(ng/ml)</th>
+                                    <th name="th_comments">Comments</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="o.result_ids.filtered(lambda r: r.status=='pos')" t-as="result">
+                                    <tr>
+                                        <td>
+                                            <span t-field="result.observation_text"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="result.observation_value"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="result.compound_test_id.cutoff"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="result.comment"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                        <div class="row">
+                            <div class="col-6">
+                                <span>Specimen ID: </span>
+                                <span t-field="o.foreign_accessionid"/>
+                            </div>
+                            <div class="col-9">
+                                <span>Specimen Type: </span>
+                                <span t-field="o.specimen_type_id.name"/>
+                            </div>
+                        </div>
+                        <table>
+                            <thead>
+                                <tr class="top_table_row">
+                                    <th name="th_lcms" colspan="5" class="text-left">SCREEN(S) / LC-MS ANALYTES DETECTED / NOT DETECTED</th>
+                                </tr>
+                                <tr class="second_table_row">
+                                    <th name="th_compound">Compound</th>
+                                    <th name="th_status">+ve/Neg</th>
+                                    <th name="th_concentration">Conc.(ng/ml)</th>
+                                    <th name="th_cutoff">Cutoff(ng/ml)</th>
+                                    <th name="th_comment">Comments</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-set="previous_group" t-value=""/>
+                                <t t-foreach="o.result_ids.sorted(key=lambda r: r.compound_test_id.name)" t-as="result">
+                                    <t t-if="result.compound_test_id">
+                                        <tr t-if="previous_group != result.compound_test_id.drug_group_id.name">
+                                            <td class="font-weight-bold">
+                                                <span t-field="result.compound_test_id.drug_group_id.name"/>
+                                            </td>
+                                            <td colspan="4">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <span t-field="result.observation_text"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="result.status"/>
+                                            </td>
+                                            <td>
+                                                <t t-if="result.status == 'neg'">
+                                                    <t t-if="result.compound_test_id.minimum_range==0">
+                                                        <span>&lt;</span>
+                                                        <span t-field="result.compound_test_id.maximum_range"/>
+                                                    </t>
+                                                    <t t-else="">
+                                                        <span t-field="result.compound_test_id.minimum_range"/>
+                                                        <span>-</span>
+                                                        <span t-field="result.compound_test_id.maximum_range"/>
+                                                    </t>
+                                                </t>
+                                                <t t-elif="result.status == 'pos'">
+                                                    <span t-field="result.observation_value"/>
+                                                </t>
+                                            </td>
+                                            <td>
+                                                <span t-field="result.compound_test_id.cutoff"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="result.comment"/>
+                                            </td>
+                                        </tr>
+                                        <t t-set="previous_group" t-value="result.compound_test_id.drug_group_id.name"/>
+                                    </t>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

@@ -119,5 +119,5 @@ class Partner(models.Model):
         return action
 
     def action_send_emr(self):
-        action_id = self.env['edi.sync.action'].search(['doc_type_id.doc_code', '=', 'export_contact_hl7'])
+        action_id = self.env['edi.sync.action'].search([('doc_type_id.doc_code', '=', 'import_contact_hl7')])
         return self.env['edi.sync.action']._do_doc_sync_cron(sync_action_id=action_id)
