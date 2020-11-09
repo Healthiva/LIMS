@@ -1,0 +1,45 @@
+<odoo>
+    <data>
+        <record id="view_process_location_tree" model="ir.ui.view">
+            <field name="name">healthiva.process_location.tree</field>
+            <field name="model">healthiva.process_location</field>
+            <field name="priority">2</field>
+            <field name="arch" type="xml">
+                <tree string="Processing Locations" multi_edit="1">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+        <record id="act_res_partner_2_process_location" model="ir.actions.act_window">
+            <field name="name">Processing Locations</field>
+            <field name="res_model">healthiva.process_location</field>
+            <field name="view_mode">tree,form</field>
+            <field name="views">[("healthiva_contacts_lims.view_process_location_tree","tree")]</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Record a new processing location
+                </p>
+            </field>
+        </record>
+        <record id="view_process_location_form" model="ir.ui.view">
+            <field name="name">healthiva.process_location.form</field>
+            <field name="model">healthiva.process_location</field>
+            <field name="priority" eval="1"/>
+            <field name="arch" type="xml">
+                <form string="Processing Location">
+                    <sheet>
+                        <field name="active" invisible="1"/>
+                        <div class="oe_button_box" name="button_box"/>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                            </group>
+                            <group>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

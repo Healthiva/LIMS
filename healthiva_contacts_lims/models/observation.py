@@ -17,8 +17,8 @@ class Observation(models.Model):
     battery_text=fields.Char(string="Observation Battery Text")
     coding_system1=fields.Char(string="Name of Coding System")
     priority=fields.Char(string="Priority")
-    specimen_collect_date=fields.Char(string="Speciment Collection Date/Time")
-    specimen_collect_end_time=fields.Char(string="Speciment Collection End Time")
+    specimen_collect_date=fields.Char(string="Specimen Collection Date/Time")
+    specimen_collect_end_time=fields.Char(string="Specimen Collection End Time")
     collection_volume=fields.Float(string="Collection/Urine Volume")
     collection_uom=fields.Char(string="Collection/Urine Unit of Measure")
     collector_identifier=fields.Char(string="Collector Identifier")
@@ -54,6 +54,8 @@ class Observation(models.Model):
     parent_order_link=fields.Char(string="Link to Parent Order")
     comment=fields.Text(string="Notes")
     patient_id = fields.Many2one("res.partner", string="Patient")
+    specimen_type_id = fields.Many2one("healthiva.specimen_type", string="Specimen Type")
+    result_ids = fields.One2many("healthiva.result", "observation_id", string="Results")
 
     def write(self, vals):
         initial_rec = self.read()[0]

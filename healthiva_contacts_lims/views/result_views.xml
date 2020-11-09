@@ -17,7 +17,7 @@
         <record id="act_res_partner_2_result" model="ir.actions.act_window">
             <field name="name">Results</field>
             <field name="res_model">healthiva.result</field>
-            <field name="view_mode">tree,form,graph,pivot,dashboard</field>
+            <field name="view_mode">tree,form,graph,pivot</field>
             <field name="views">[("healthiva_contacts_lims.view_result_tree","tree")]</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
@@ -44,8 +44,8 @@
                     <field name="alternate_observation_system"/>
                     <field name="observation_subid"/>
                     <field name="observation_value"/>
-                    <field name="date_type"/>                        
-                    <field name="date_subtype"/>                        
+                    <field name="data_type"/>                        
+                    <field name="data_subtype"/>                        
                     <field name="encoding"/>                        
                     <field name="data_text"/>                        
                     <field name="coding_system"/>                        
@@ -89,7 +89,7 @@
                         <div class="oe_button_box" name="button_box"/>
                         <group>
                             <group>
-                                <field name="status"/>
+                                <field name="status" force_save="1"/>
                                 <field name="sequence_number"/>
                                 <field name="value_type"/>
                                 <field name="observation_identifier"/>
@@ -101,15 +101,19 @@
                                 <field name="alternate_observation_system"/>
                                 <field name="observation_subid"/>
                                 <field name="observation_value"/>
-                                <field name="date_type"/>                        
-                                <field name="date_subtype"/>                        
-                                <field name="encoding"/>                        
-                                <field name="data_text"/>                        
-                                <field name="coding_system"/>                        
-                                <field name="identifier"/>                        
-                                <field name="result_text"/>                        
+                                <field name="data_type"/>
+                                <field name="data_subtype"/>
+                                <field name="encoding"/>
+                                <field name="data_text"/>
+                                <field name="coding_system"/>
+                                <field name="identifier"/>
+                                <field name="result_text"/>
                                 <field name="coding_system_name1"/>
                                 <field name="patient_id"/>
+                                <field name="compound_test_id"/>
+                                <field name="drug_group"/>
+                                <field name="specimen_type_id"/>
+                                <field name="observation_id"/>
                             </group>
                             <group>
                                 <field name="ref_ranges"/>
@@ -123,16 +127,16 @@
                                 <field name="observer"/>
                                 <field name="observation_method"/>
                                 <field name="equipment_identifier"/>
-                                <field name="analysis_date"/>                        
-                                <field name="reserver_hamorizing1"/>                        
-                                <field name="reserver_hamorizing2"/>                        
-                                <field name="reserver_hamorizing3"/>                        
-                                <field name="performing_names"/>         
-                                <field name="performing_address"/>         
-                                <field name="performing_director"/>         
-                                <field name="release_category"/>         
-                                <field name="route_cause"/>         
-                                <field name="local_process_control"/>         
+                                <field name="analysis_date"/>
+                                <field name="reserver_hamorizing1"/>
+                                <field name="reserver_hamorizing2"/>
+                                <field name="reserver_hamorizing3"/>
+                                <field name="performing_names"/>
+                                <field name="performing_address"/>
+                                <field name="performing_director"/>
+                                <field name="release_category"/>
+                                <field name="route_cause"/>
+                                <field name="local_process_control"/>
                             </group>
                         </group>
                         <notebook colspan="4">
@@ -166,8 +170,8 @@
                     <field name="alternate_observation_system"/>
                     <field name="observation_subid"/>
                     <field name="observation_value"/>
-                    <field name="date_type"/>                        
-                    <field name="date_subtype"/>                        
+                    <field name="data_type"/>                        
+                    <field name="data_subtype"/>                        
                     <field name="encoding"/>                        
                     <field name="data_text"/>                        
                     <field name="coding_system"/>                        
@@ -208,8 +212,8 @@
                     <filter string="Alternate Observation System" name="alternate_observation_system"/>
                     <filter string="Observation Sub ID" name="observation_subid"/>
                     <filter string="Observation Value" name="observation_value"/>
-                    <filter string="Type of Data" name="date_type"/>                        
-                    <filter string="Data Sub Type" name="date_subtype"/>                        
+                    <filter string="Type of Data" name="data_type"/>                        
+                    <filter string="Data Sub Type" name="data_subtype"/>                        
                     <filter string="Encoding or Identifier" name="encoding"/>                        
                     <filter string="Data or Text" name="data_text"/>                        
                     <filter string="Coding System" name="coding_system"/>                        
@@ -255,8 +259,8 @@
                         <filter string="Alternate Observation System" name="group_alternate_observation_system" context="{'group_by': 'alternate_observation_system'}"/>
                         <filter string="Observation Sub ID" name="group_observation_subid" context="{'group_by': 'observation_subid'}"/>
                         <filter string="Observation Value" name="group_observation_value" context="{'group_by': 'observation_value'}"/>
-                        <filter string="Type of Data" name="group_date_type" context="{'group_by': 'date_type'}"/>                        
-                        <filter string="Data Sub Type" name="group_date_subtype" context="{'group_by': 'date_subtype'}"/>                        
+                        <filter string="Type of Data" name="group_data_type" context="{'group_by': 'data_type'}"/>                        
+                        <filter string="Data Sub Type" name="group_data_subtype" context="{'group_by': 'data_subtype'}"/>                        
                         <filter string="Encoding or Identifier" name="group_encoding" context="{'group_by': 'encoding'}"/>                        
                         <filter string="Data or Text" name="group_data_text" context="{'group_by': 'data_text'}"/>                        
                         <filter string="Coding System" name="group_coding_system" context="{'group_by': 'coding_system'}"/>                        

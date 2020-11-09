@@ -315,6 +315,26 @@
         action="healthiva_contacts_lims.act_res_partner_2_result"
         sequence="13"/>
 
+    <menuitem id="compound_test_menu"
+        parent="menu_related_info"
+        action="healthiva_contacts_lims.act_res_partner_2_compound_test"
+        sequence="14"/>
+
+    <menuitem id="process_location_menu"
+        parent="menu_related_info"
+        action="healthiva_contacts_lims.act_res_partner_2_process_location"
+        sequence="15"/>
+
+    <menuitem id="specimen_type_menu"
+        parent="menu_related_info"
+        action="healthiva_contacts_lims.act_res_partner_2_specimen_type"
+        sequence="16"/>
+
+    <menuitem id="drug_group_menu"
+        parent="menu_related_info"
+        action="healthiva_contacts_lims.act_res_partner_2_drug_group"
+        sequence="17"/>
+
     <!-- <menuitem id="menu_patient_reports"
         name="Reporting"
         parent="contacts.menu_contacts"

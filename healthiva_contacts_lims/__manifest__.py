@@ -25,6 +25,7 @@
     'data': [
         'security/security_groups.xml',
         'security/ir.model.access.csv',
+        'views/report_patient_results.xml',
         'views/blood_lead_views.xml',
         'views/res_config_settings.xml',
         'views/common_order_views.xml',
@@ -39,6 +40,10 @@
         'views/observation_views.xml',
         'views/provider_views.xml',
         'views/result_views.xml',
+        'views/specimen_type_views.xml',
+        'views/process_location_views.xml',
+        'views/drug_group_views.xml',
+        'views/compound_test_views.xml',
         'views/res_partner_views.xml',
         'data/edi_contact_data.xml',
     ]

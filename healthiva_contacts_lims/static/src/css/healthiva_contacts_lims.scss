@@ -1,0 +1,53 @@
+html {
+    font-size: 16px;
+}
+
+.header_info {
+    display: table;
+    clear: both;
+    width: 100%;
+    margin: 5px;
+    border-top: 2px solid black;
+    border-bottom: 2px solid black;
+  }
+  
+.header_item {
+    float: left;
+    width: 48%;
+    margin: 1%;
+  }
+
+table {
+    border: 2px solid black;
+    width: 100%;
+    margin: 5px;
+    font-size: 20px;
+  }
+
+.top_table_row {
+    background-color: black;
+    color: white;
+}
+
+.second_table_row {
+    background-color: turquoise;
+}
+
+th {
+    text-align: center;
+    border: 2px solid black;
+}
+
+tr {
+    text-align: center;
+    border-right: 2px solid black;
+}
+
+.medication {
+    margin: 5px;
+    font-size: 18px;
+}
+
+.medication_header {
+    border-bottom: 2px solid black;
+}

@@ -4,6 +4,5 @@ class ResConfigSettings(models.TransientModel):
 
     _inherit = 'res.config.settings'
 
-    test_enable = fields.Boolean(string="Enable Test?", config_parameter='test_enable')
-    minimum = fields.Integer(string="Minimum Range", config_parameter='minimum')
-    maximum = fields.Integer(string="Maximum Range", config_parameter='maximum')
+    lab_director = fields.Char(string="Lab Director", config_parameter='lab_director')
+    cliaid = fields.Char(string="CLIA ID", config_parameter='cliaid')

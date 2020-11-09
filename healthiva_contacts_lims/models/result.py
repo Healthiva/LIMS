@@ -18,8 +18,8 @@ class Result(models.Model):
     alternate_observation_system=fields.Char(string="Name of Alternate Obeservation System")
     observation_subid=fields.Char(string="Observation Sub ID")
     observation_value=fields.Char(string="Observation Value")
-    date_type=fields.Char(string="Type of Data")
-    date_subtype=fields.Char(string="Data Sub Type")
+    data_type=fields.Char(string="Type of Data")
+    data_subtype=fields.Char(string="Data Sub Type")
     encoding=fields.Char(string="Encoding or Identifier")
     data_text=fields.Text(string="Data or Text")
     coding_system=fields.Char(string="Coding System")
@@ -50,7 +50,11 @@ class Result(models.Model):
     local_process_control=fields.Char(string="Local Process Control")
     patient_id = fields.Many2one("res.partner", string="Related Patient")
     comment=fields.Text(string="Notes")
-    status=fields.Selection(string="Status", selection=[('pos', 'Positive'), ('neg', 'Negative')])
+    status=fields.Selection(string="Status", readonly=True, selection=[('pos', 'Positive'), ('neg', 'Negative')])
+    compound_test_id = fields.Many2one("healthiva.compound_test", string="Compound Test")
+    drug_group = fields.Char(related="compound_test_id.drug_group_id.name", readonly=True, string="Drug Group")
+    specimen_type_id = fields.Many2one("healthiva.specimen_type", related="observation_id.specimen_type_id", string="Specimen Type")
+    observation_id = fields.Many2one("healthiva.observation", string="Observation")
 
     def write(self, vals):
         initial_rec = self.read()[0]
@@ -62,3 +66,14 @@ class Result(models.Model):
                 body += "{} changed from {} to {}<br/>".format(self._fields[key].string, initial_rec[key], final_rec[key])
         self.message_post(body=body, author_id=self.env.user.partner_id.id)
         return rslt
+
+    @api.onchange('compound_test_id', 'observation_value', 'status')
+    def onchange_status(self):
+        for record in self:
+            try:
+                if float(record.observation_value) < record.compound_test_id.minimum_range or float(record.observation_value) > record.compound_test_id.maximum_range:
+                    record.status = "pos"
+                else:
+                    record.status = "neg"
+            except:
+                record.status = "neg"
