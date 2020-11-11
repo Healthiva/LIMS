@@ -7,6 +7,10 @@ from os import listdir
 from os.path import isfile, join
 from odoo.exceptions import UserError 
 from odoo import models, fields, api
+from base64 import encodestring
+import logging
+
+_logger = logging.getLogger(__name__)
 
 class SyncDocumentType(models.Model):
 
@@ -17,7 +21,6 @@ class SyncDocumentType(models.Model):
                                 ('export_contact_hl7', 'Export hl7 contact')
                                 ])
 
-    @profile('/home/zna/Documents/prof.profile')
     @api.model
     def _do_export_contact_hl7(self, conn, sync_action_id, values):
         '''
@@ -29,38 +32,45 @@ class SyncDocumentType(models.Model):
         conn._connect()
         conn.cd(sync_action_id.dir_path)
         results = []
-        results.append(self.parse_msh(self))
-        results.append(self.parse_patient(self))
-        for provider in self.provider_ids:
+        try:
+            patient = values['instance']
+        except: 
+            raise UserError("No associated patient specified!")
+        results.append(self.parse_msh(patient))
+        results.append(self.parse_patient(patient))
+        for provider in patient.provider_ids:
             results.append(self.parse_provider(provider))
-        for insurance in self.insurance_ids:
+        for insurance in patient.insurance_ids:
             results.append(self.parse_insurance(insurance))
-        for guarantor in self.guarantor_ids:
+        for guarantor in patient.guarantor_ids:
             results.append(self.parse_guarantor(guarantor))
-        for diagnosis in self.diagnosis_ids:
+        for diagnosis in patient.diagnosis_ids:
             results.append(self.parse_diagnosis(diagnosis))
-        for general_info in self.general_info_ids:
+        for general_info in patient.general_info_ids:
             results.append(self.parse_general_info(general_info))
-        for common_order in self.common_order_ids:
+        for common_order in patient.common_order_ids:
             results.append(self.parse_common_order(common_order))
-        for observation in self.observation_ids:
+        for observation in patient.observation_ids:
             results.append(self.parse_observation(observation))
-        for result in self.result_ids:
+        for result in patient.result_ids:
             results.append(self.parse_result(result))
-        final = { "document": "", "missing": "", "is_missing": False }
+        final = { "document": "", "missing": "", "is_missing": False}
         for dic in results:
-            final = { "document": final["document"] + dic["document"], "missing": final["missing"] + dic["missing"] }
+            final["document"] = final["document"] + dic["document"]
+            final["missing"] = final["missing"] + dic["missing"]
             if dic["is_missing"]:
                 final["is_missing"] = True
         if final["is_missing"]:
             raise UserError(final["missing"])
-        final["document"]
-        filename = 'result.hl7'
-        with open(filename, 'wt') as f:
+        filename = '{}.hl7'.format(patient.external_pid)
+        with open(filename, 'a') as f:
             f.write(final["document"])
+            f.close()
+        with open(filename, 'r') as f:
             conn.upload_file(filename, f)
             f.close()
         conn._disconnect()
+        os.remove(filename)
         return True
 
     @api.model
@@ -79,31 +89,31 @@ class SyncDocumentType(models.Model):
                 patient = None
                 message = None
                 observation = None
-                with open(edifile, 'rt') as f:
-                    lines = f.read().splitlines()
-                    for line in lines:
-                        fields = self.get_string_fields(line)
-                        if fields[0] == "MSH":
-                            message = self.create_msh(fields)
-                        elif fields[0] == "PID":
-                            patient = self.identify_patient(fields, message)
-                        elif fields[0] == "PV1":
-                            self.create_provider(fields, patient)
-                        elif fields[0] == "IN1":
-                            self.create_insurance(fields, patient)
-                        elif fields[0] == "GT1":
-                            self.create_guarantor(fields, patient)
-                        elif fields[0] == "DG1":
-                            self.create_diagnosis(fields, patient)
-                        elif fields[0] == "ZCI":
-                            self.create_general_info(fields, patient)
-                        elif fields[0] == "ORC":
-                            self.create_common_order(fields, patient)
-                        elif fields[0] == "OBR":
-                            observation = self.identify_patient(fields, patient)
-                        elif fields[0] == "OBX":
-                            self.create_result(fields, observation)
-                    f.close()
+                f = conn.download_file(edifile)
+                lines = f.splitlines()
+                for line in lines:
+                    line = line.decode("utf-8")
+                    fields = self.get_string_fields(line)
+                    if fields[0] == "MSH":
+                        message = self.create_msh(fields)
+                    elif fields[0] == "PID":
+                        patient = self.identify_patient(fields, message)
+                    elif fields[0] == "PV1":
+                        self.create_provider(fields, patient)
+                    elif fields[0] == "IN1":
+                        self.create_insurance(fields, patient)
+                    elif fields[0] == "GT1":
+                        self.create_guarantor(fields, patient)
+                    elif fields[0] == "DG1":
+                        self.create_diagnosis(fields, patient)
+                    elif fields[0] == "ZCI":
+                        self.create_general_info(fields, patient)
+                    elif fields[0] == "ORC":
+                        self.create_common_order(fields, patient)
+                    elif fields[0] == "OBR":
+                        observation = self.identify_observation(fields, patient)
+                    elif fields[0] == "OBX":
+                        self.create_result(fields, observation)
         conn._disconnect()
         return True
         
@@ -200,9 +210,9 @@ class SyncDocumentType(models.Model):
         patient = self.env['res.partner']
         record = patient.search([('external_pid', '=', vals['external_pid'])])
         if record:
-            record = patient.write(1, record.id, vals)
+            record.write(vals)
         else:
-            record = patient.write(0, 0, vals)
+            record = patient.create([vals])
         return record
 
     def identify_observation(self, fields, patient):
@@ -228,7 +238,7 @@ class SyncDocumentType(models.Model):
             "clinic_info_back": self.fill_fields(fields, 13, 1),
             "specimen_receipt_date": self.fill_fields(fields, 14),
             "specimen_source": self.fill_fields(fields, 15),
-            "providerid": self.strtoint(self.fill_fields(fields, 16, 0)),
+            "providerid": self.strtofloat(self.fill_fields(fields, 16, 0)),
             "provider_last": self.fill_fields(fields, 16, 1),
             "provider_first": self.fill_fields(fields, 16, 2),
             "provider_middle": self.fill_fields(fields, 16, 3),
@@ -257,9 +267,11 @@ class SyncDocumentType(models.Model):
         observation = self.env['healthiva.observation']
         record = observation.search([('foreign_accessionid', '=', vals['foreign_accessionid'])])
         if record:
-            record = observation.write(1, record.id, vals)
+            if record["patient_id"]:
+                del vals["patient_id"]
+            record.write(vals)
         else:
-            record = observation.write(0, 0, vals)
+            record = observation.create([vals])
         return record
 
     def create_msh(self, fields):
@@ -278,10 +290,7 @@ class SyncDocumentType(models.Model):
             "processingid": self.fill_fields(fields, 10),
             "hl7_version": self.fill_fields(fields, 11)
         }])
-
-    def create_patient(self, fields, message):
-        return self.env['res.partner'].create([])
-
+    
     def create_provider(self, fields, patient):
         self.env['healthiva.provider'].create([{
             "sequence_number": self.strtoint(self.fill_fields(fields, 1)),
@@ -475,11 +484,8 @@ class SyncDocumentType(models.Model):
             "patient_id": self.get_id(patient)
         }])
 
-    def create_observation(self, fields, patient):
-        self.env['healthiva.observation'].create([])
-
-    def create_result(self, fields, patient):
-        self.env['healthiva.result'].create([{
+    def create_result(self, fields, observation):
+        obx = self.env['healthiva.result'].create([{
             "sequence_number": self.strtoint(self.fill_fields(fields, 1)),
             "value_type": self.fill_fields(fields, 2),
             "observation_identifier": self.fill_fields(fields, 3, 0),
@@ -520,13 +526,19 @@ class SyncDocumentType(models.Model):
             "release_category": self.fill_fields(fields, 26),
             "route_cause": self.fill_fields(fields, 27),
             "local_process_control": self.fill_fields(fields, 28),
-            "patient_id": self.get_id(patient),
+            "observation_id": self.get_id(observation),
+            "patient_id": self.get_id(observation['patient_id']),
         }])
+        obr = self.env['healthiva.observation'].search([('id', '=', observation.id)])
+        obr.write({
+            "result_ids": [(4,obx.id)]
+        })
         
     def parse_msh(self, msh):
         instance = self.env["healthiva.message_header"]
         dic = msh.read()[0]
         fields = [
+            "field_delimiter",
             "component_delimiter",
             "sending_application",
             "sending_facility",
@@ -872,7 +884,7 @@ class SyncDocumentType(models.Model):
             "parent_order_link",
         ]
         subfield_delimiter_indices = [2,4,6,7,12,17,20,21,22,23,24,25,26,31,32,39]
-        required = [1,2,6,7,8,16]
+        required = [1,2,6,7,8,15]
         line = "OBR|"
         return self.create_line(instance, dic, fields, subfield_delimiter_indices, required, line)
     
@@ -927,12 +939,14 @@ class SyncDocumentType(models.Model):
         return self.create_line(instance, dic, fields, subfield_delimiter_indices, required, line)
 
     def create_line(self, instance, dic, fields, subfield_delimiter_indices, required, line):
-        missing = line[0:3] + " missing: "
+        missing = ""
         is_missing = False
         for i, field in enumerate(fields, start=1):
             if dic[field]:
                 line += "{}".format(dic[field])
             elif not dic[field] and i in required:
+                if not is_missing:
+                    missing += line[0:3] + " missing: "
                 missing += instance._fields[field].string + ", "
                 is_missing = True
             if i < len(fields):
@@ -942,5 +956,6 @@ class SyncDocumentType(models.Model):
                     line += "|"
             else:
                 line += "\n"
-                missing += "\n\n"
+                if is_missing:
+                    missing += "\n\n"
         return { "document": line, "missing": missing, "is_missing": is_missing}

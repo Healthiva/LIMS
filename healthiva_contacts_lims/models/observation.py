@@ -28,7 +28,7 @@ class Observation(models.Model):
     clinic_info_back=fields.Text(string="Relevant Clinical Information (For Backwards Compatibility")
     specimen_receipt_date=fields.Char(string="Date/Time of Specimen Receipt in Lab")
     specimen_source=fields.Char(string="Specimen Source")
-    providerid=fields.Integer(string="Ordering Provider ID")
+    providerid=fields.Float(string="Ordering Provider ID", digits=(12,0))
     provider_last=fields.Char(string="Ordering Provider Last Name")
     provider_first=fields.Char(string="Ordering Provider First Initial")
     provider_middle=fields.Char(string="Ordering Provider Middle Initial")
@@ -56,6 +56,7 @@ class Observation(models.Model):
     patient_id = fields.Many2one("res.partner", string="Patient")
     specimen_type_id = fields.Many2one("healthiva.specimen_type", string="Specimen Type")
     result_ids = fields.One2many("healthiva.result", "observation_id", string="Results")
+    result_count = fields.Integer(string='Result Count', compute='_compute_result_count', readonly=True)
 
     def write(self, vals):
         initial_rec = self.read()[0]
@@ -67,3 +68,15 @@ class Observation(models.Model):
                 body += "{} changed from {} to {}<br/>".format(self._fields[key].string, initial_rec[key], final_rec[key])
         self.message_post(body=body, author_id=self.env.user.partner_id.id)
         return rslt
+            
+    def action_view_result(self):
+        results = self.mapped('result_ids')
+        action = self.env.ref('healthiva_contacts_lims.act_res_partner_2_result').read()[0]
+        if len(results) >= 1:
+            action['domain'] = [('id', 'in', results.ids)]
+        return action
+
+    @api.depends('result_ids')
+    def _compute_result_count(self):
+        for obr in self:
+            obr.result_count = len(self.result_ids)

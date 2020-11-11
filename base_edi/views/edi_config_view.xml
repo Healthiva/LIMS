@@ -122,7 +122,7 @@
                 <form string="Carrier">
                     <header>
                         <button type="object" name="test_provider_connection" string="Test Connection"/>
-                        <button type="object" name="do_doucument_sync" string="Run Manually" />
+                        <button type="object" name="do_document_sync" string="Run Manually" />
                     </header>
                     <sheet>
                         <field name="active" invisible="1"/>

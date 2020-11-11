@@ -30,7 +30,15 @@
                 <form string="Observations">
                     <sheet>
                         <field name="active" invisible="1"/>
-                        <div class="oe_button_box" name="button_box"/>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_view_result"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-globe icon"
+                                attrs="{'invisible': [('result_count', '=', 0)]}">
+                                <field name="result_count" widget="statinfo" string="OBX"/>
+                            </button>
+                        </div>
                         <div class="oe_title">
                             <field name="provider_prefix"/>
                             <field name="provider_first"/>
