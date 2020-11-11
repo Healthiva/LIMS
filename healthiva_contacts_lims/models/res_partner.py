@@ -57,6 +57,11 @@ class Partner(models.Model):
     observation_ids = fields.One2many("healthiva.observation", "patient_id", string="Observations")
     result_ids = fields.One2many("healthiva.result", "patient_id", string="Results")
     message_header_id = fields.Many2one("healthiva.message_header", string="Message Header")
+    insurance_count = fields.Integer(string='Insurance Count', compute='_compute_insurance_count', readonly=True)
+    provider_count = fields.Integer(string='Provider Count', compute='_compute_provider_count', readonly=True)
+    common_order_count = fields.Integer(string='Common Order Count', compute='_compute_common_order_count', readonly=True)
+    observation_count = fields.Integer(string='Observation Count', compute='_compute_observation_count', readonly=True)
+    result_count = fields.Integer(string='Result Count', compute='_compute_result_count', readonly=True)
 
     #MSH
     field_delimiter=fields.Char(string="Field Delimiter", related="message_header_id.field_delimiter")
@@ -118,6 +123,31 @@ class Partner(models.Model):
             action['domain'] = [('id', 'in', results.ids)]
         return action
 
+    @api.depends('provider_ids')
+    def _compute_provider_count(self):
+        for pid in self:
+            pid.provider_count = len(self.provider_ids)
+
+    @api.depends('insurance_ids')
+    def _compute_insurance_count(self):
+        for pid in self:
+            pid.insurance_count = len(self.insurance_ids)
+
+    @api.depends('common_order_ids')
+    def _compute_common_order_count(self):
+        for pid in self:
+            pid.common_order_count = len(self.common_order_ids)
+
+    @api.depends('observation_ids')
+    def _compute_observation_count(self):
+        for pid in self:
+            pid.observation_count = len(self.observation_ids)
+
+    @api.depends('result_ids')
+    def _compute_result_count(self):
+        for pid in self:
+            pid.result_count = len(self.result_ids)
+
     def action_send_emr(self):
-        action_id = self.env['edi.sync.action'].search([('doc_type_id.doc_code', '=', 'import_contact_hl7')])
-        return self.env['edi.sync.action']._do_doc_sync_cron(sync_action_id=action_id)
+        action_id = self.env['edi.sync.action'].search([('doc_type_id.doc_code', '=', 'export_contact_hl7')])
+        return self.env['edi.sync.action']._do_doc_sync_cron(sync_action_id=action_id, instance=self)

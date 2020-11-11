@@ -18,42 +18,37 @@
             <button name="action_view_provider"
                 type="object"
                 class="oe_stat_button"
-                icon="fa-globe icon">
-                <div class="o_field_widget o_stat_info">
-                  <span class="o_stat_text">PV</span>
-                </div>
+                icon="fa-globe icon"
+                attrs="{'invisible': [('provider_count', '=', 0)]}">
+                <field name="provider_count" widget="statinfo" string="PV1"/>
             </button>
             <button name="action_view_insurance"
                 type="object"
                 class="oe_stat_button"
-                icon="fa-globe icon">
-                <div class="o_field_widget o_stat_info">
-                  <span class="o_stat_text">IN1</span>
-                </div>
+                icon="fa-globe icon"
+                attrs="{'invisible': [('insurance_count', '=', 0)]}">
+                <field name="insurance_count" widget="statinfo" string="IN1"/>
             </button>
             <button name="action_view_common_order"
                 type="object"
                 class="oe_stat_button"
-                icon="fa-globe icon">
-                <div class="o_field_widget o_stat_info">
-                  <span class="o_stat_text">ORC</span>
-                </div>
+                icon="fa-globe icon"
+                attrs="{'invisible': [('common_order_count', '=', 0)]}">
+                <field name="common_order_count" widget="statinfo" string="ORC"/>
             </button>
             <button name="action_view_observation"
                 type="object"
                 class="oe_stat_button"
-                icon="fa-globe icon">
-                <div class="o_field_widget o_stat_info">
-                  <span class="o_stat_text">OBR</span>
-                </div>
+                icon="fa-globe icon"
+                attrs="{'invisible': [('observation_count', '=', 0)]}">
+                <field name="observation_count" widget="statinfo" string="OBR"/>
             </button>
             <button name="action_view_result"
                 type="object"
                 class="oe_stat_button"
-                icon="fa-globe icon">
-                <div class="o_field_widget o_stat_info">
-                  <span class="o_stat_text">OBX</span>
-                </div>
+                icon="fa-globe icon"
+                attrs="{'invisible': [('result_count', '=', 0)]}">
+                <field name="result_count" widget="statinfo" string="OBX"/>
             </button>
           </div>
         </xpath>

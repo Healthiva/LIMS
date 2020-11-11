@@ -110,7 +110,7 @@ class EDIConfig(models.Model):
                 ftp_connection._disconnect()
         raise UserError(_('Connection Test Succeeded! Everything seems properly set up!'))
 
-    def do_doucument_sync(self):
+    def do_document_sync(self):
         for config in self:
             config.sync_action_ids.do_doc_sync_user()
         return True
@@ -158,7 +158,7 @@ class EDISyncAction(models.Model):
         return True
 
     @api.model
-    def _do_doc_sync_cron(self, sync_action_id=False, use_new_cursor=False, company_id=False):
+    def _do_doc_sync_cron(self, sync_action_id=False, use_new_cursor=False, company_id=False, instance=False):
         '''
         Call the doucment code method added by the modules.
         '''
@@ -182,7 +182,8 @@ class EDISyncAction(models.Model):
                     cr = registry(self._cr.dbname).cursor()
                     self = self.with_env(self.env(cr=cr))
                 values = {
-                    'company_id': company_id or sync_action.config_id.company_id
+                    'company_id': company_id or sync_action.config_id.company_id,
+                    'instance': instance
                 }
                 doc_action = sync_action.doc_type_id.doc_code
                 sync_method = '_do_%s' % doc_action

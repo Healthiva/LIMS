@@ -1,18 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data>
-        <report 
-            id="action_report_patientresults"
-            string="Test Results"
-            model="healthiva.observation" 
-            report_type="qweb-pdf"
-            paperformat="healthiva_contacts_lims.paperformat_healthiva_observation"
-            file="healthiva_contacts_lims.report_patientresults" 
-            name="healthiva_contacts_lims.report_patientresults"
-            print_report_name="'Tox_%s_%s_%s' % (object.patient_id.last_name or '', object.patient_id.first_name or '', object.specimen_collect_date or '')"
-        />
-    </data>
-
     <record id="paperformat_healthiva_observation" model="report.paperformat">
         <field name="name">Observation Report</field>
         <field name="default" eval="True"/>
@@ -265,4 +252,17 @@
             </t>
         </t>
     </template>
+
+    <data>
+        <report 
+            id="action_report_patientresults"
+            string="Test Results"
+            model="healthiva.observation" 
+            report_type="qweb-pdf"
+            paperformat="healthiva_contacts_lims.paperformat_healthiva_observation"
+            file="healthiva_contacts_lims.report_patientresults" 
+            name="healthiva_contacts_lims.report_patientresults"
+            print_report_name="'Tox_%s_%s_%s' % (object.patient_id.last_name or '', object.patient_id.first_name or '', object.specimen_collect_date or '')"
+        />
+    </data>
 </odoo>
