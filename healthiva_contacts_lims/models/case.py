@@ -2,13 +2,12 @@
 
 from odoo import models, fields, api
 
-class Partner(models.Model):
-    _inherit = 'res.partner'
-
-    #Old Fields Overwritten
-    company_type = fields.Selection(string="Company Type", default="person", selection=[('person', 'Individual'), ('company', 'Company')])
+class Case(models.Model):
+    _name = 'healthiva.case'
+    _description = 'Medical Case'
 
     #New Fields
+    active = fields.Boolean(default=True, groups="healthiva_contacts_lims.group_contact_admin")
     sequence_number=fields.Integer(string="Sequence Number")
     external_pid = fields.Char(string="External Patient ID")
     assigned_pid = fields.Char(string="Lab Assigned Patient ID")
@@ -77,77 +76,10 @@ class Partner(models.Model):
     processingid = fields.Char(string="Processing ID", related="message_header_id.processingid")
     hl7_version = fields.Char(string="Version of HL7", related="message_header_id.hl7_version")
 
-    def write(self, vals):
-        initial_rec = self.read()[0]
-        rslt = super(Partner, self.sudo()).write(vals)
-        final_rec = self.read()[0]
-        body = "{} Updated the following fields:<br/>".format(final_rec['write_date'].strftime("%d/%m/%y %H:%M"))
-        for key in initial_rec:
-            if initial_rec[key] != final_rec[key] and key != 'write_date':
-                body += "{} changed from {} to {}<br/>".format(self._fields[key].string, initial_rec[key], final_rec[key])
-        self.message_post(body=body, author_id=self.env.user.partner_id.id)
-        return rslt
-
-    def action_view_insurance(self):
-        insurances = self.mapped('insurance_ids')
-        action = self.env.ref('healthiva_contacts_lims.act_res_partner_2_insurance').read()[0]
-        if len(insurances) >= 1:
-            action['domain'] = [('id', 'in', insurances.ids)]
-        return action
-
-    def action_view_provider(self):
-        providers = self.mapped('provider_ids')
-        action = self.env.ref('healthiva_contacts_lims.act_res_partner_2_provider').read()[0]
-        if len(providers) >= 1:
-            action['domain'] = [('id', 'in', providers.ids)]
-        return action
-
-    def action_view_common_order(self):
-        common_orders = self.mapped('common_order_ids')
-        action = self.env.ref('healthiva_contacts_lims.act_res_partner_2_common_order').read()[0]
-        if len(common_orders) >= 1:
-            action['domain'] = [('id', 'in', common_orders.ids)]
-        return action
-            
-    def action_view_observation(self):
-        observations = self.mapped('observation_ids')
-        action = self.env.ref('healthiva_contacts_lims.act_res_partner_2_observation').read()[0]
-        if len(observations) >= 1:
-            action['domain'] = [('id', 'in', observations.ids)]
-        return action
-            
-    def action_view_result(self):
-        results = self.mapped('result_ids')
-        action = self.env.ref('healthiva_contacts_lims.act_res_partner_2_result').read()[0]
-        if len(results) >= 1:
-            action['domain'] = [('id', 'in', results.ids)]
-        return action
-
-    @api.depends('provider_ids')
-    def _compute_provider_count(self):
-        for pid in self:
-            pid.provider_count = len(self.provider_ids)
-
-    @api.depends('insurance_ids')
-    def _compute_insurance_count(self):
-        for pid in self:
-            pid.insurance_count = len(self.insurance_ids)
-
-    @api.depends('common_order_ids')
-    def _compute_common_order_count(self):
-        for pid in self:
-            pid.common_order_count = len(self.common_order_ids)
-
-    @api.depends('observation_ids')
-    def _compute_observation_count(self):
-        for pid in self:
-            pid.observation_count = len(self.observation_ids)
-
-    @api.depends('result_ids')
-    def _compute_result_count(self):
-        for pid in self:
-            pid.result_count = len(self.result_ids)
-
-    def action_send_emr(self):
-        action_id = self.env['edi.sync.action'].search([('doc_type_id.doc_code', '=', 'export_contact_hl7')])
-        return self.env['edi.sync.action']._do_doc_sync_cron(sync_action_id=action_id, instance=self)
+    observation_id = fields.Many2one("healthiva.observation", string="Observation")
+    result_id = fields.Many2one("healthiva.result", string="Result")
+    foreign_accessionid = fields.Char(related="observation_id.foreign_accessionid", string="Unique Foreign Accession ID")
+    observation_date = fields.Datetime(related="result_id.observation_date", string="Date/Time of Obeservation")
+    specimen_collect_date = fields.Datetime(related="observation_id.specimen_collect_date", string="Specimen Collection Date/Time")
+    provider_last = fields.Char(related="observation_id.provider_last", string="Ordering Provider Last Name")
+    provider_first = fields.Char(related="observation_id.provider_first", string="Ordering Provider First Initial")

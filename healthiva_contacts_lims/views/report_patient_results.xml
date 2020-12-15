@@ -74,11 +74,11 @@
                 </div>
                 <div class="header_item">
                     <strong>Patient DOB: </strong>
-                    <span t-if="o.patient_id.birth_date and len(o.patient_id.birth_date)>=8" t-esc="'{}/{}/{}'.format(o.patient_id.birth_date[4:6],o.patient_id.birth_date[6:8],o.patient_id.birth_date[0:4])"/>
+                    <span t-if="o.patient_id.birth_date" t-esc="o.patient_id.birth_date"/>
                 </div>
                 <div class="header_item">
                     <strong>Collect Date: </strong> 
-                    <span t-if=" o.specimen_collect_date and len(o.specimen_collect_date)>=8" t-esc="'{}/{}/{}'.format(o.specimen_collect_date[4:6],o.specimen_collect_date[6:8],o.specimen_collect_date[0:4])"/>
+                    <span t-if=" o.specimen_collect_date" t-esc="o.specimen_collect_date"/>
                 </div>
                 <div class="header_item">
                     <strong>Sample Type: </strong>
@@ -86,7 +86,7 @@
                 </div>
                 <div class="header_item">
                     <strong>Received Date: </strong>
-                    <span t-if="result_sample.observation_date and len(result_sample.observation_date)>=8" t-esc="'{}/{}/{}'.format(result_sample.observation_date[4:6],result_sample.observation_date[6:8],result_sample.observation_date[0:4])"/>
+                    <span t-if="result_sample.observation_date" t-esc="result_sample.observation_date"/>
                 </div>
                 <div class="header_item">
                     <strong>Order No.: </strong>
@@ -94,7 +94,7 @@
                 </div>
                 <div class="header_item">
                     <strong>Reported Date: </strong>
-                    <span t-if="o.patient_id.receive_date and len(o.patient_id.receive_date)>=8" t-esc="'{}/{}/{}'.format(o.patient_id.receive_date[4:6],o.patient_id.receive_date[6:8],o.patient_id.receive_date[0:4])"/>
+                    <span t-if="o.patient_id.receive_date" t-esc="o.patient_id.receive_date"/>
                 </div>
             </div>
         </div>

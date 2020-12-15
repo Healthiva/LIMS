@@ -18,7 +18,7 @@ class CommonOrder(models.Model):
     response_flag = fields.Char(string="Response Flag")
     quantity_timing = fields.Char(string="Quantity/Timing")
     parent = fields.Char(string="Parent")
-    transaction_date = fields.Char(string="Date/Time of Transaction")
+    transaction_date = fields.Datetime(string="Date/Time of Transaction")
     entered1 = fields.Char(string="Entered By 1")
     entered2 = fields.Char(string="Entered By 2")
     providerid = fields.Char(string="Ordering Provider ID Number")

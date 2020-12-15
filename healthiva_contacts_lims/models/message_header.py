@@ -13,7 +13,7 @@ class MessageHeader(models.Model):
     sending_facility=fields.Char(string="Sending Facility")
     receiving_application=fields.Char(string="Receiving Application")
     receiving_facility=fields.Char(string="Receiving Facility")
-    receive_date=fields.Char(string="Receiving Date/Time of Message")
+    receive_date=fields.Datetime(string="Receiving Date/Time of Message")
     security=fields.Char(string="Security")
     message_type=fields.Char(string="Message Type")
     message_controlid=fields.Char(string="Message Control ID")

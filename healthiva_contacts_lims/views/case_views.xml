@@ -1,0 +1,117 @@
+<odoo>
+    <data>
+        <record id="view_case_tree" model="ir.ui.view">
+            <field name="name">healthiva.case.tree</field>
+            <field name="model">healthiva.case</field>
+            <field name="priority">2</field>
+            <field name="arch" type="xml">
+                <tree string="Cases" multi_edit="1">
+                    <field name="foreign_accessionid"/>
+                    <field name="last_name"/>
+                    <field name="first_name"/>
+                    <field name="birth_date"/>
+                    <field name="observation_date"/>
+                    <field name="specimen_collect_date"/>
+                    <field name="provider_last"/>
+                    <field name="provider_first"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="act_res_partner_2_case" model="ir.actions.act_window">
+            <field name="name">Cases</field>
+            <field name="res_model">healthiva.case</field>
+            <field name="view_mode">tree,form</field>
+            <field name="views">[("healthiva_contacts_lims.view_case_tree","tree")]</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Record a new Case
+                </p>
+            </field>
+        </record>
+
+        <record id="view_case_form" model="ir.ui.view">
+            <field name="name">healthiva.case.form</field>
+            <field name="model">healthiva.case</field>
+            <field name="priority" eval="1"/>
+            <field name="arch" type="xml">
+                <form string="Case">
+                    <sheet>
+                        <field name="active" invisible="1"/>
+                        <div class="oe_button_box" name="button_box"/>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="first_name" style="width: 50%"/>
+                                <field name="last_name" style="width: 50%"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="middle_name"/>
+                                <field name="external_pid"/>
+                                <field name="assigned_pid"/>
+                                <field name="alternate_pid"/>
+                                <field name="birth_date"/>
+                                <field name="age_years"/>
+                                <field name="age_months"/>
+                                <field name="age_days"/>
+                                <field name="gender"/>
+                                <field name="alias"/>
+                                <field name="race"/>
+                                <field name="country_code"/>
+                                <field name="tele_use_code"/>
+                                <field name="tele_equip_type"/>
+                                <field name="tele_address"/>
+                                <field name="work_phone"/>
+                                <field name="language"/>
+                                <field name="marital_status"/>
+                            </group>
+                            <group>
+                                <field name="religion"/>
+                                <field name="is_fasting"/>
+                                <field name="ethnic_group"/>
+                                <field name="driver_license"/>
+                                <field name="ssn"/>
+                                <field name="account_number"/>
+                                <field name="check_digit"/>
+                                <field name="check_digit_scheme"/>
+                                <field name="bill_type"/>
+                                <field name="abn_flag"/>
+                                <field name="specimen_status"/>
+                                <field name="mother_maiden"/>
+                                <field name="mother_identifier"/>
+                                <field name="patient_address1"/>
+                                <field name="patient_address2"/>
+                                <field name="patient_address_city"/>
+                                <field name="patient_address_state"/>
+                                <field name="patient_address_zip"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page name='msh_page' string="MSH">
+                                <group>
+                                    <group>
+                                        <field name="field_delimiter"/>
+                                        <field name="sending_application"/>
+                                        <field name="sending_facility"/>
+                                        <field name="receiving_application"/>
+                                        <field name="receiving_facility"/>                 
+                                        <field name="receive_date"/>                 
+                                    </group>
+                                    <group>
+                                        <field name="component_delimiter"/>
+                                        <field name="security"/>
+                                        <field name="message_type"/>
+                                        <field name="message_controlid"/>
+                                        <field name="processingid"/>
+                                        <field name="hl7_version"/>        
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

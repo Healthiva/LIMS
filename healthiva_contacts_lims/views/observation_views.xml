@@ -6,6 +6,7 @@
             <field name="priority">2</field>
             <field name="arch" type="xml">
                 <tree string="Observations" multi_edit="1">
+                    <field name="foreign_accessionid"/>
                     <field name="provider_first"/>
                     <field name="provider_last"/>
                 </tree>

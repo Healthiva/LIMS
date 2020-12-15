@@ -249,16 +249,44 @@
       </field>
     </record>
 
+    <record id="contacts.action_contacts" model="ir.actions.act_window">
+        <field name="name">Patients</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
+        <field name="search_view_id" ref="base.view_res_partner_filter"/>
+        <field name="context">{'default_is_company': True}</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Create a patient in your address book
+          </p><p>
+            Odoo helps you to easily track all activities related to a customer.
+          </p>
+        </field>
+    </record>
+
     <menuitem name="H-Module"
         id="contacts.menu_contacts"
         sequence="2"
         web_icon="contacts,static/description/icon.png"
         groups="base.group_user,base.group_partner_manager"/>
+
+    <menuitem id="contacts.res_partner_menu_contacts"
+        name="Patients"
+        action="contacts.action_contacts"
+        parent="contacts.menu_contacts"
+        sequence="2"/>
+        
+    <menuitem id="menu_cases"
+        name="Cases"
+        parent="contacts.menu_contacts"
+        action="healthiva_contacts_lims.act_res_partner_2_case"
+        sequence="2"/>
         
     <menuitem id="menu_related_info"
         name="Related Information"
         parent="contacts.menu_contacts"
-        sequence="2"/>
+        sequence="3"/>
 
     <menuitem id="blood_lead_menu"
         parent="menu_related_info"
