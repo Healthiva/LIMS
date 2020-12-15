@@ -21,7 +21,7 @@
         <field name="interval_type">days</field>
         <field name="numbercall">-1</field>
         <field name="doall" eval="False"/>
-        <field name="model_id" ref="model_edi_sync_action"/>
+        <field name="model_id" ref="base_edi.model_edi_sync_action"/>
         <field name="code">model._do_doc_sync_cron()</field>
         <field name="state">code</field>
     </record>

@@ -9,6 +9,7 @@ from odoo.exceptions import UserError
 from odoo import models, fields, api
 from base64 import encodestring
 import logging
+import datetime
 
 _logger = logging.getLogger(__name__)
 
@@ -36,6 +37,8 @@ class SyncDocumentType(models.Model):
             patient = values['instance']
         except: 
             raise UserError("No associated patient specified!")
+
+        # Gather all information related to patient
         results.append(self.parse_msh(patient))
         results.append(self.parse_patient(patient))
         for provider in patient.provider_ids:
@@ -55,6 +58,8 @@ class SyncDocumentType(models.Model):
         for result in patient.result_ids:
             results.append(self.parse_result(result))
         final = { "document": "", "missing": "", "is_missing": False}
+    
+        # Error if required fields are missing
         for dic in results:
             final["document"] = final["document"] + dic["document"]
             final["missing"] = final["missing"] + dic["missing"]
@@ -62,6 +67,8 @@ class SyncDocumentType(models.Model):
                 final["is_missing"] = True
         if final["is_missing"]:
             raise UserError(final["missing"])
+        
+        # Create file on local temporarily and upload file to specified folder 
         filename = '{}.hl7'.format(patient.external_pid)
         with open(filename, 'a') as f:
             f.write(final["document"])
@@ -89,15 +96,31 @@ class SyncDocumentType(models.Model):
                 patient = None
                 message = None
                 observation = None
-                f = conn.download_file(edifile)
-                lines = f.splitlines()
+
+                # Download File temporarily then reupload into new move folder
+                conn.cd(sync_action_id.dir_path)
+                content = conn.download_file(edifile)
+                with open(edifile, 'ab') as f:
+                    f.write(content)
+                    f.close()
+                conn.rm(edifile)
+                conn.cd(sync_action_id.dir_mv_path)
+                with open(edifile, 'rb') as f:
+                    conn.upload_file(edifile, f)
+                    f.close()
+                os.remove(edifile)
+
+                # Process each line of file into record
+                lines = content.splitlines()
                 for line in lines:
                     line = line.decode("utf-8")
                     fields = self.get_string_fields(line)
                     if fields[0] == "MSH":
                         message = self.create_msh(fields)
                     elif fields[0] == "PID":
-                        patient = self.identify_patient(fields, message)
+                        records = self.identify_patient(fields, message)
+                        patient = records[0]
+                        case = records[1]
                     elif fields[0] == "PV1":
                         self.create_provider(fields, patient)
                     elif fields[0] == "IN1":
@@ -111,7 +134,7 @@ class SyncDocumentType(models.Model):
                     elif fields[0] == "ORC":
                         self.create_common_order(fields, patient)
                     elif fields[0] == "OBR":
-                        observation = self.identify_observation(fields, patient)
+                        observation = self.identify_observation(fields, patient, case)
                     elif fields[0] == "OBX":
                         self.create_result(fields, observation)
         conn._disconnect()
@@ -155,6 +178,20 @@ class SyncDocumentType(models.Model):
             pass
         return
 
+    def strtodate(self, str):
+        try:
+            return datetime.datetime.strptime(str, "%Y%m%d").date()
+        except:
+            pass
+        return
+
+    def strtodatetime(self, str):
+        try:
+            return datetime.datetime.strptime(str, "%Y%m%d%H%M")
+        except:
+            pass
+        return
+
     def get_id(self, instance):
         try:
             return instance.id
@@ -173,7 +210,7 @@ class SyncDocumentType(models.Model):
             "first_name": self.fill_fields(fields, 5, 1),
             "middle_name": self.fill_fields(fields, 5, 2),
             "mother_maiden": self.fill_fields(fields, 6),
-            "birth_date": self.fill_fields(fields, 7, 0),
+            "birth_date": self.strtodate(self.fill_fields(fields, 7, 0)),
             "age_years": self.strtoint(self.fill_fields(fields, 7, 1)),
             "age_months": self.strtoint(self.fill_fields(fields, 7, 2)),
             "age_days": self.strtoint(self.fill_fields(fields, 7, 3)),
@@ -208,14 +245,17 @@ class SyncDocumentType(models.Model):
             "message_header_id": message.id
         }
         patient = self.env['res.partner']
+        case = self.env['healthiva.case']
         record = patient.search([('external_pid', '=', vals['external_pid'])])
         if record:
             record.write(vals)
         else:
-            record = patient.create([vals])
+            record = []
+            record.append(patient.create([vals]))
+            record.append(case.create([vals]))
         return record
 
-    def identify_observation(self, fields, patient):
+    def identify_observation(self, fields, patient, case):
         vals = {
             "sequence_number": self.strtoint(self.fill_fields(fields, 1)),
             "foreign_accessionid": self.fill_fields(fields, 2, 0),
@@ -227,7 +267,7 @@ class SyncDocumentType(models.Model):
             "coding_system1": self.fill_fields(fields, 4, 2),
             "priority": self.fill_fields(fields, 5),
             # "": fields[6],
-            "specimen_collect_date": self.fill_fields(fields, 7),
+            "specimen_collect_date": self.strtodatetime(self.fill_fields(fields, 7)),
             "specimen_collect_end_time": self.fill_fields(fields, 8),
             "collection_volume": self.strtoint(self.fill_fields(fields, 9, 0)),
             "collection_uom": self.fill_fields(fields, 9, 1),
@@ -236,7 +276,7 @@ class SyncDocumentType(models.Model):
             "danger_code": self.fill_fields(fields, 12),
             "clinic_info": self.fill_fields(fields, 13, 0),
             "clinic_info_back": self.fill_fields(fields, 13, 1),
-            "specimen_receipt_date": self.fill_fields(fields, 14),
+            "specimen_receipt_date": self.strtodatetime(self.fill_fields(fields, 14)),
             "specimen_source": self.fill_fields(fields, 15),
             "providerid": self.strtofloat(self.fill_fields(fields, 16, 0)),
             "provider_last": self.fill_fields(fields, 16, 1),
@@ -253,7 +293,7 @@ class SyncDocumentType(models.Model):
             "microbiology_organism": self.fill_fields(fields, 20, 1),
             "coding_system2": self.fill_fields(fields, 20, 2),
             "producer_field2": self.fill_fields(fields, 21),
-            "report_date": self.fill_fields(fields, 22),
+            "report_date": self.strtodatetime(self.fill_fields(fields, 22)),
             "producer_charge": self.fill_fields(fields, 23),
             "producer_sectionid": self.fill_fields(fields, 24),
             "order_result_status": self.fill_fields(fields, 25),
@@ -272,6 +312,7 @@ class SyncDocumentType(models.Model):
             record.write(vals)
         else:
             record = observation.create([vals])
+            case.write([{"observation_id": self.get_id(record)}])
         return record
 
     def create_msh(self, fields):
@@ -283,7 +324,7 @@ class SyncDocumentType(models.Model):
             "sending_facility": self.fill_fields(fields, 3),
             "receiving_application": self.fill_fields(fields, 4),
             "receiving_facility": self.fill_fields(fields, 5),
-            "receive_date": self.fill_fields(fields, 6),
+            "receive_date": self.strtodatetime(self.fill_fields(fields, 6)),
             "security": self.fill_fields(fields, 7),
             "message_type": self.fill_fields(fields, 8),
             "message_controlid": self.fill_fields(fields, 9),
@@ -319,17 +360,17 @@ class SyncDocumentType(models.Model):
             "courtesy_code": self.fill_fields(fields, 22),
             "credit_rating": self.fill_fields(fields, 23),
             "contract_code": self.fill_fields(fields, 24),
-            "contract_date": self.fill_fields(fields, 25),
+            "contract_date": self.strtodate(self.fill_fields(fields, 25)),
             "contract_total": self.fill_fields(fields, 26),
             "contract_period": self.fill_fields(fields, 27),
             "interest_code": self.fill_fields(fields, 28),
             "tbd_code": self.fill_fields(fields, 29),
-            "tbd_date": self.fill_fields(fields, 30),
+            "tbd_date": self.strtodate(self.fill_fields(fields, 30)),
             "bda_code": self.fill_fields(fields, 31),
             "bd_transfer_total": self.fill_fields(fields, 32),
             "bd_recovery_total": self.fill_fields(fields, 33),
             "delete_indicator": self.fill_fields(fields, 34),
-            "delete_date": self.fill_fields(fields, 35),
+            "delete_date": self.strtodate(self.fill_fields(fields, 35)),
             "discharge_disposition": self.fill_fields(fields, 36),
             "discharge_location": self.fill_fields(fields, 37),
             "diet_type": self.fill_fields(fields, 38),
@@ -338,8 +379,8 @@ class SyncDocumentType(models.Model):
             "account_status": self.fill_fields(fields, 41),
             "pending_loc": self.fill_fields(fields, 42),
             "prior_temp_location": self.fill_fields(fields, 43),
-            "admit_date": self.fill_fields(fields, 44),
-            "discharge_date": self.fill_fields(fields, 45),
+            "admit_date": self.strtodatetime(self.fill_fields(fields, 44)),
+            "discharge_date": self.strtodatetime(self.fill_fields(fields, 45)),
             "current_balance": self.fill_fields(fields, 46),
             "charges_total": self.fill_fields(fields, 47),
             "adjustments_total": self.fill_fields(fields, 48),
@@ -368,15 +409,15 @@ class SyncDocumentType(models.Model):
             "group_name": self.fill_fields(fields, 9),
             "employerid": self.fill_fields(fields, 10),
             "employer_name": self.fill_fields(fields, 11),
-            "plan_effective_date": self.fill_fields(fields, 12),
-            "plan_expiration_date": self.fill_fields(fields, 13),
+            "plan_effective_date": self.strtodatetime(self.fill_fields(fields, 12)),
+            "plan_expiration_date": self.strtodatetime(self.fill_fields(fields, 13)),
             "authorization_info": self.fill_fields(fields, 14),
             "plan_type": self.fill_fields(fields, 15),
             "insured_last_name": self.fill_fields(fields, 16, 0),
             "insured_first_name": self.fill_fields(fields, 16, 1),
             "insured_middle_name": self.fill_fields(fields, 16, 2),
             "insured_relation": self.fill_fields(fields, 17),
-            "insured_dob": self.fill_fields(fields, 18),
+            "insured_dob": self.strtodate(self.fill_fields(fields, 18)),
             "insured_address1": self.fill_fields(fields, 19, 0),
             "insured_address2": self.fill_fields(fields, 19, 1),
             "insured_address_city": self.fill_fields(fields, 19, 2),
@@ -386,12 +427,12 @@ class SyncDocumentType(models.Model):
             "coordinator_benefits": self.fill_fields(fields, 21),
             "primary_payer": self.fill_fields(fields, 22),
             "notice_admit_code": self.fill_fields(fields, 23),
-            "notice_admit_date": self.fill_fields(fields, 24),
+            "notice_admit_date": self.strtodatetime(self.fill_fields(fields, 24)),
             "report_eligibility_flag": self.fill_fields(fields, 25),
-            "report_eligibility_date": self.fill_fields(fields, 26),
+            "report_eligibility_date": self.strtodatetime(self.fill_fields(fields, 26)),
             "release_info_code": self.fill_fields(fields, 27),
             "preadmit_certification": self.fill_fields(fields, 28),
-            "verification_date": self.fill_fields(fields, 29),
+            "verification_date": self.strtodatetime(self.fill_fields(fields, 29)),
             "verification_by": self.fill_fields(fields, 30),
             "agreement_type": self.fill_fields(fields, 31),
             "bill_status": self.fill_fields(fields, 32),
@@ -417,13 +458,13 @@ class SyncDocumentType(models.Model):
             "guarantor_address_zip": self.fill_fields(fields, 5, 4),
             "phone": self.fill_fields(fields, 6),
             "work_phone": self.fill_fields(fields, 7),
-            "dob": self.fill_fields(fields, 8),
+            "dob": self.strtodate(self.fill_fields(fields, 8)),
             "gender": self.fill_fields(fields, 9),
             "guarantor_type": self.fill_fields(fields, 10),
             "patient_relation": self.fill_fields(fields, 11),
             "ssn": self.fill_fields(fields, 12),
-            "begin_date": self.fill_fields(fields, 13),
-            "end_date": self.fill_fields(fields, 14),
+            "begin_date": self.strtodatetime(self.fill_fields(fields, 13)),
+            "end_date": self.strtodatetime(self.fill_fields(fields, 14)),
             "priority": self.fill_fields(fields, 15),
             "employer_name": self.fill_fields(fields, 16),
             "patient_id": self.get_id(patient)
@@ -468,7 +509,7 @@ class SyncDocumentType(models.Model):
             "response_flag": self.fill_fields(fields, 6),
             "quantity_timing": self.fill_fields(fields, 7),
             "parent": self.fill_fields(fields, 8),
-            "transaction_date": self.fill_fields(fields, 9),
+            "transaction_date": self.strtodatetime(self.fill_fields(fields, 9)),
             "entered1": self.fill_fields(fields, 10),
             "entered2": self.fill_fields(fields, 11),
             "providerid": self.fill_fields(fields, 12, 0),
@@ -509,14 +550,14 @@ class SyncDocumentType(models.Model):
             "probability": self.fill_fields(fields, 9),
             "abnormal_test_nature": self.fill_fields(fields, 10),
             "result_status": self.fill_fields(fields, 11),
-            "ref_range_update_date": self.fill_fields(fields, 12),
+            "ref_range_update_date": self.strtodate(self.fill_fields(fields, 12)),
             "access_checks": self.fill_fields(fields, 13),
-            "observation_date": self.fill_fields(fields, 14),
+            "observation_date": self.strtodatetime(self.fill_fields(fields, 14)),
             "producerid": self.fill_fields(fields, 15),
             "observer": self.fill_fields(fields, 16),
             "observation_method": self.fill_fields(fields, 17),
             "equipment_identifier": self.fill_fields(fields, 18),
-            "analysis_date": self.fill_fields(fields, 19),
+            "analysis_date": self.strtodatetime(self.fill_fields(fields, 19)),
             "reserver_hamorizing1": self.fill_fields(fields, 20),
             "reserver_hamorizing2": self.fill_fields(fields, 21),
             "reserver_hamorizing3": self.fill_fields(fields, 22),
@@ -530,7 +571,11 @@ class SyncDocumentType(models.Model):
             "patient_id": self.get_id(observation['patient_id']),
         }])
         obr = self.env['healthiva.observation'].search([('id', '=', observation.id)])
+        case = self.env['healthiva.case'].search([('foreign_accessionid', '=', observation['foreign_accessionid'])])
         obr.write({
+            "result_ids": [(4,obx.id)]
+        })
+        case.write({
             "result_ids": [(4,obx.id)]
         })
         
@@ -943,7 +988,12 @@ class SyncDocumentType(models.Model):
         is_missing = False
         for i, field in enumerate(fields, start=1):
             if dic[field]:
-                line += "{}".format(dic[field])
+                if isinstance(dic[field], datetime.date):
+                    line += dic[field].strftime("%Y%m%d")
+                elif isinstance(dic[field], datetime.datetime):
+                    line += dic[field].strftime("%Y%m%d%H%M")
+                else:
+                    line += "{}".format(dic[field])
             elif not dic[field] and i in required:
                 if not is_missing:
                     missing += line[0:3] + " missing: "

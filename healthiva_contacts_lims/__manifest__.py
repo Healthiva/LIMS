@@ -28,6 +28,7 @@
         'views/report_patient_results.xml',
         'views/blood_lead_views.xml',
         'views/res_config_settings.xml',
+        'views/case_views.xml',
         'views/common_order_views.xml',
         'views/courtesy_views.xml',
         'views/diagnosis_views.xml',
