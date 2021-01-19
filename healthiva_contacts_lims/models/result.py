@@ -11,7 +11,7 @@ class Result(models.Model):
     sequence_number=fields.Char(string="Sequence Number")
     value_type=fields.Char(string="Value Type")
     observation_identifier=fields.Char(string="Observation Identifier")
-    observation_text=fields.Text(string="Observation Text")
+    observation_text=fields.Char(string="Observation Text")
     coding_system_name1=fields.Char(string="Name of the Coding System 1")
     alternate_identifier=fields.Char(string="Alternate Identifier")
     alternate_observation_text=fields.Text(string="Alternate Obeservation Text")

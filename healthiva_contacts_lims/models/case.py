@@ -4,9 +4,12 @@ from odoo import models, fields, api
 
 class Case(models.Model):
     _name = 'healthiva.case'
+    _inherit = ['mail.thread']
     _description = 'Medical Case'
 
     #New Fields
+    name = fields.Char(string="Patient Name", default="New")
+    phone = fields.Char(string="Phone")
     active = fields.Boolean(default=True, groups="healthiva_contacts_lims.group_contact_admin")
     sequence_number=fields.Integer(string="Sequence Number")
     external_pid = fields.Char(string="External Patient ID")
@@ -47,20 +50,7 @@ class Case(models.Model):
     driver_license = fields.Char(string="Driver's License")
     mother_identifier = fields.Char(string="Mother's Identifier")
     ethnic_group = fields.Selection(string="Ethinic Group", default='U', selection=[('U', 'Unknown'), ('H', 'Hispanic or Latino'), ('N', 'Not Hispanic or Latino')])
-    provider_ids = fields.One2many("healthiva.provider", "patient_id", string="Providers")
-    insurance_ids = fields.One2many("healthiva.insurance", "patient_id", string="Insurances")
-    guarantor_ids = fields.One2many("healthiva.guarantor", "patient_id", string="Guarantors")
-    diagnosis_ids = fields.One2many("healthiva.diagnosis", "patient_id", string="Diagnoses")
-    common_order_ids = fields.One2many("healthiva.common_order", "patient_id", string="Common Orders")
-    general_info_ids = fields.One2many("healthiva.general_info", "patient_id", string="General Information")
-    observation_ids = fields.One2many("healthiva.observation", "patient_id", string="Observations")
-    result_ids = fields.One2many("healthiva.result", "patient_id", string="Results")
     message_header_id = fields.Many2one("healthiva.message_header", string="Message Header")
-    insurance_count = fields.Integer(string='Insurance Count', compute='_compute_insurance_count', readonly=True)
-    provider_count = fields.Integer(string='Provider Count', compute='_compute_provider_count', readonly=True)
-    common_order_count = fields.Integer(string='Common Order Count', compute='_compute_common_order_count', readonly=True)
-    observation_count = fields.Integer(string='Observation Count', compute='_compute_observation_count', readonly=True)
-    result_count = fields.Integer(string='Result Count', compute='_compute_result_count', readonly=True)
 
     #MSH
     field_delimiter = fields.Char(string="Field Delimiter", related="message_header_id.field_delimiter")
@@ -83,3 +73,14 @@ class Case(models.Model):
     specimen_collect_date = fields.Datetime(related="observation_id.specimen_collect_date", string="Specimen Collection Date/Time")
     provider_last = fields.Char(related="observation_id.provider_last", string="Ordering Provider Last Name")
     provider_first = fields.Char(related="observation_id.provider_first", string="Ordering Provider First Initial")
+
+    def write(self, vals):
+        initial_rec = self.read()[0]
+        rslt = super(Case, self.sudo()).write(vals)
+        final_rec = self.read()[0]
+        body = "{} Updated the following fields:<br/>".format(final_rec['write_date'].strftime("%d/%m/%y %H:%M"))
+        for key in initial_rec:
+            if initial_rec[key] != final_rec[key] and key != 'write_date':
+                body += "{} changed from {} to {}<br/>".format(self._fields[key].string, initial_rec[key], final_rec[key])
+        self.message_post(body=body, author_id=self.env.user.partner_id.id)
+        return rslt

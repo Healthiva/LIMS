@@ -110,7 +110,140 @@
                             </page>
                         </notebook>
                     </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
                 </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_healthiva_case_filter">
+            <field name="name">healthiva.case.select</field>
+            <field name="model">healthiva.case</field>
+            <field name="arch" type="xml">
+                <search string="Search Cases">
+                    <field name="last_name"/>
+                    <field name="first_name"/>
+                    <field name="middle_name"/>
+                    <field name="external_pid"/>
+                    <field name="assigned_pid"/>
+                    <field name="alternate_pid"/>
+                    <field name="birth_date"/>
+                    <field name="age_years"/>
+                    <field name="age_months"/>
+                    <field name="age_days"/>
+                    <field name="gender"/>
+                    <field name="alias"/>
+                    <field name="race"/>
+                    <field name="language"/>
+                    <field name="country_code"/>
+                    <field name="tele_use_code"/>
+                    <field name="tele_equip_type"/>
+                    <field name="tele_address"/>
+                    <field name="work_phone"/>
+                    <field name="marital_status"/>
+                    <field name="religion"/>
+                    <field name="is_fasting"/>
+                    <field name="ethnic_group"/>
+                    <field name="driver_license"/>
+                    <field name="ssn"/>
+                    <field name="account_number"/>
+                    <field name="check_digit"/>
+                    <field name="check_digit_scheme"/>
+                    <field name="bill_type"/>
+                    <field name="abn_flag"/>
+                    <field name="specimen_status"/>
+                    <field name="mother_maiden"/>
+                    <field name="mother_identifier"/>
+                    <field name="patient_address1"/>
+                    <field name="patient_address2"/>
+                    <field name="patient_address_city"/>
+                    <field name="patient_address_state"/>
+                    <field name="patient_address_zip"/>
+                    <separator/>
+                    <filter string="First Name" name="first_name"/>
+                    <filter string="Middle Name" name="middle_name"/>
+                    <filter string="Last Name" name="last_name"/>
+                    <filter string="External Patient ID" name="external_pid"/>
+                    <filter string="Lab Assigned Patient ID" name="assigned_pid"/>
+                    <filter string="Alternate Patient ID" name="alternate_pid"/>
+                    <filter string="Date of Birth" name="birth_date"/>
+                    <filter string="Age Years" name="age_years"/>
+                    <filter string="Age Months" name="age_months"/>
+                    <filter string="Age Days" name="age_days"/>
+                    <filter string="Gender" name="gender"/>
+                    <filter string="Race" name="race"/>
+                    <filter string="Language" name="language"/>
+                    <filter string="Country Code" name="country_code"/>
+                    <filter string="Telecommunication Use Code" name="tele_use_code"/>
+                    <filter string="Telecommunication Equipment Type" name="tele_equip_type"/>
+                    <filter string="Telecommunication Address" name="tele_address"/>
+                    <filter string="Work Phone" name="work_phone"/>
+                    <filter string="Alias" name="alias"/>
+                    <filter string="Marital Status" name="marital_status"/>
+                    <filter string="Religion" name="religion"/>
+                    <filter string="Is Fasting?" name="is_fasting"/>
+                    <filter string="Ethinic Group" name="ethnic_group"/>
+                    <filter string="Driver's License" name="driver_license"/>
+                    <filter string="Social Security Number" name="ssn"/>
+                    <filter string="Account Number" name="account_number"/>
+                    <filter string="Check Digit" name="check_digit"/>
+                    <filter string="Check Digit Scheme" name="check_digit_scheme"/>
+                    <filter string="Bill Type" name="bill_type"/>
+                    <filter string="ABN Flag" name="abn_flag"/>
+                    <filter string="Status of Specimen" name="specimen_status"/>
+                    <filter string="Mother's Maiden Name" name="mother_maiden"/>
+                    <filter string="Mother's Identifier" name="mother_identifier"/>
+                    <filter string="Patient Address Line 1" name="patient_address1"/>
+                    <filter string="Patient Address Line 2" name="patient_address2"/>
+                    <filter string="Patient Address City" name="patient_address_city"/>
+                    <filter string="Patient Address State" name="patient_address_state"/>
+                    <filter string="Patient Address zip" name="patient_address_zip"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                    <separator/>
+                    <group expand="0" name="group_by" string="Group By">
+                    <filter string="First Name" name="group_first_name" context="{'group_by': 'first_name'}"/>
+                    <filter string="Middle Name" name="group_middle_name" context="{'group_by': 'middle_name'}"/>
+                    <filter string="Last Name" name="group_last_name" context="{'group_by': 'last_name'}"/>
+                    <filter string="External Patient ID" name="group_external_pid" context="{'group_by': 'external_pid'}"/>
+                    <filter string="Lab Assigned Patient ID" name="group_assigned_pid" context="{'group_by': 'assigned_pid'}"/>
+                    <filter string="Alternate Patient ID" name="group_alternate_pid" context="{'group_by': 'alternate_pid'}"/>
+                    <filter string="Date of Birth" name="group_birth_date" context="{'group_by': 'birth_date'}"/>
+                    <filter string="Age Years" name="group_age_years" context="{'group_by': 'age_years'}"/>
+                    <filter string="Age Months" name="group_age_months" context="{'group_by': 'age_months'}"/>
+                    <filter string="Age Days" name="group_age_days" context="{'group_by': 'age_days'}"/>
+                    <filter string="Gender" name="group_gender" context="{'group_by': 'gender'}"/>
+                    <filter string="Race" name="group_race" context="{'group_by': 'race'}"/>
+                    <filter string="Language" name="group_language" context="{'group_by': 'language'}"/>
+                    <filter string="Telecommunication Use Code" name="group_tele_use_code" context="{'group_by': 'tele_use_code'}"/>
+                    <filter string="Telecommunication Equipment Type" name="group_tele_equip_type" context="{'group_by': 'tele_equip_type'}"/>
+                    <filter string="Telecommunication Address" name="group_tele_address" context="{'group_by': 'tele_address'}"/>
+                    <filter string="Country Code" name="group_country_code" context="{'group_by':'country_code'}"/>
+                    <filter string="Work Phone" name="group_work_phone" context="{'group_by':'work_phone'}"/>
+                    <filter string="Alias" name="group_alias" context="{'group_by': 'alias'}"/>
+                    <filter string="Marital Status" name="group_marital_status" context="{'group_by': 'marital_status'}"/>
+                    <filter string="Religion" name="group_religion" context="{'group_by': 'religion'}"/>
+                    <filter string="Is Fasting?" name="group_is_fasting" context="{'group_by': 'is_fasting'}"/>
+                    <filter string="Ethinic Group" name="group_ethnic_group" context="{'group_by': 'ethnic_group'}"/>
+                    <filter string="Driver's License" name="group_driver_license" context="{'group_by': 'driver_license'}"/>
+                    <filter string="Social Security Number" name="group_ssn" context="{'group_by': 'ssn'}"/>
+                    <filter string="Account Number" name="group_account_number" context="{'group_by': 'account_number'}"/>
+                    <filter string="Check Digit" name="group_check_digit" context="{'group_by':'check_digit'}"/>
+                    <filter string="Check Digit Scheme" name="group_check_digit_scheme" context="{'group_by':'check_digit_scheme'}"/>
+                    <filter string="Bill Type" name="group_bill_type" context="{'group_by': 'bill_type'}"/>
+                    <filter string="ABN Flag" name="group_abn_flag" context="{'group_by': 'abn_flag'}"/>
+                    <filter string="Status of Specimen" name="group_specimen_status" context="{'group_by': 'specimen_status'}"/>
+                    <filter string="Mother's Maiden Name" name="group_mother_maiden" context="{'group_by': 'mother_maiden'}"/>
+                    <filter string="Mother's Identifier" name="group_mother_identifier" context="{'group_by': 'mother_identifier'}"/>
+                    <filter string="Patient Address Line 1" name="group_patient_address1" context="{'group_by':'patient_address1'}"/>
+                    <filter string="Patient Address Line 2" name="group_patient_address2" context="{'group_by':'patient_address2'}"/>
+                    <filter string="Patient Address City" name="group_patient_address_city" context="{'group_by':'patient_address_city'}"/>
+                    <filter string="Patient Address State" name="group_patient_address_state" context="{'group_by':'patient_address_state'}"/>
+                    <filter string="Patient Address zip" name="group_patient_address_zip" context="{'group_by':'patient_address_zip'}"/>
+                    </group>
+                </search>
             </field>
         </record>
     </data>

@@ -74,11 +74,11 @@
                 </div>
                 <div class="header_item">
                     <strong>Patient DOB: </strong>
-                    <span t-if="o.patient_id.birth_date" t-esc="o.patient_id.birth_date"/>
+                    <span t-if="o.patient_id.birth_date" t-esc="o.patient_id.birth_date.strftime('%m/%d/%Y')"/>
                 </div>
                 <div class="header_item">
                     <strong>Collect Date: </strong> 
-                    <span t-if=" o.specimen_collect_date" t-esc="o.specimen_collect_date"/>
+                    <span t-if=" o.specimen_collect_date" t-esc="o.specimen_collect_date.strftime('%m/%d/%Y')"/>
                 </div>
                 <div class="header_item">
                     <strong>Sample Type: </strong>
@@ -86,7 +86,7 @@
                 </div>
                 <div class="header_item">
                     <strong>Received Date: </strong>
-                    <span t-if="result_sample.observation_date" t-esc="result_sample.observation_date"/>
+                    <span t-if="result_sample.observation_date" t-esc="result_sample.observation_date.strftime('%m/%d/%Y')"/>
                 </div>
                 <div class="header_item">
                     <strong>Order No.: </strong>
@@ -94,7 +94,7 @@
                 </div>
                 <div class="header_item">
                     <strong>Reported Date: </strong>
-                    <span t-if="o.patient_id.receive_date" t-esc="o.patient_id.receive_date"/>
+                    <span t-if="o.patient_id.receive_date" t-esc="o.patient_id.receive_date.strftime('%m/%d/%Y')"/>
                 </div>
             </div>
         </div>
