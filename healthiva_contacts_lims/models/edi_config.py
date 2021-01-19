@@ -94,6 +94,7 @@ class SyncDocumentType(models.Model):
         if files:
             for edifile in files:
                 patient = None
+                case = None
                 message = None
                 observation = None
 
@@ -120,7 +121,8 @@ class SyncDocumentType(models.Model):
                     elif fields[0] == "PID":
                         records = self.identify_patient(fields, message)
                         patient = records[0]
-                        case = records[1]
+                        if records[1] != None:
+                            case = records[1]
                     elif fields[0] == "PV1":
                         self.create_provider(fields, patient)
                     elif fields[0] == "IN1":
@@ -246,13 +248,14 @@ class SyncDocumentType(models.Model):
         }
         patient = self.env['res.partner']
         case = self.env['healthiva.case']
-        record = patient.search([('external_pid', '=', vals['external_pid'])])
-        if record:
-            record.write(vals)
+        record = [None, None]
+        record.append(patient.search([('external_pid', '=', vals['external_pid'])]))
+        if record[0]:
+            record[0].write(vals)
         else:
-            record = []
-            record.append(patient.create([vals]))
-            record.append(case.create([vals]))
+            record[0] = patient.create([vals])
+            vals.pop('message_follower_ids', False)
+            record[1] = case.create([vals])
         return record
 
     def identify_observation(self, fields, patient, case):
@@ -312,7 +315,7 @@ class SyncDocumentType(models.Model):
             record.write(vals)
         else:
             record = observation.create([vals])
-            case.write([{"observation_id": self.get_id(record)}])
+        case.write({"observation_id": self.get_id(record)})
         return record
 
     def create_msh(self, fields):
@@ -526,6 +529,7 @@ class SyncDocumentType(models.Model):
         }])
 
     def create_result(self, fields, observation):
+        test = self.env['healthiva.compound_test'].search([('name', '=', self.fill_fields(fields, 3, 1))])
         obx = self.env['healthiva.result'].create([{
             "sequence_number": self.strtoint(self.fill_fields(fields, 1)),
             "value_type": self.fill_fields(fields, 2),
@@ -569,13 +573,10 @@ class SyncDocumentType(models.Model):
             "local_process_control": self.fill_fields(fields, 28),
             "observation_id": self.get_id(observation),
             "patient_id": self.get_id(observation['patient_id']),
+            "compound_test_id": self.get_id(test),
         }])
         obr = self.env['healthiva.observation'].search([('id', '=', observation.id)])
-        case = self.env['healthiva.case'].search([('foreign_accessionid', '=', observation['foreign_accessionid'])])
         obr.write({
-            "result_ids": [(4,obx.id)]
-        })
-        case.write({
             "result_ids": [(4,obx.id)]
         })
         
